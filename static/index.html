@@ -103,6 +103,31 @@
           .attr("visibility", (transform.k > 3) ? "visible" : "hidden");
       }
 
+
+      viewport.selectAll(".state").on("click", mapClicked);
+      viewport.selectAll(".county").on("click", mapClicked);
+
+      function mapClicked(event, d) {
+        //d is the specific state or county clicked on
+        let bounds = path.bounds(d.geometry);
+
+
+        let dW = bounds[1][0] - bounds[0][0];
+        let dH = bounds[1][1] - bounds[0][1];
+        let cx = (bounds[0][0] + bounds[1][0]) / 2;
+        let cy = (bounds[0][1] + bounds[1][1]) / 2;
+
+        let scale = Math.max(1, Math.min(10, 0.9 / Math.max(dW / w,
+          dH / h)));
+
+        let translate = [w / 2 - cx * scale, h / 2 - cy * scale];
+
+        let newTransform = d3.zoomIdentity
+          .translate(translate[0], translate[1])
+          .scale(scale);
+        map.transition().duration(1000).call(zoom.transform, newTransform);
+
+      }
     }
     makeChloro();
   </script>
