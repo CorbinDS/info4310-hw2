@@ -2,7 +2,33 @@
 
 <head>
   <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://d3js.org/topojson.v3.min.js"></script>
   <style>
+    svg {
+      /* border: 1px black solid; */
+    }
+
+    .county {
+      fill: rgb(211, 211, 211);
+      stroke: none;
+    }
+
+    .state {
+      fill: lightgrey;
+      stroke: none;
+    }
+
+    .county-outline {
+      stroke: rgb(20, 20, 20);
+      stroke-width: 1px;
+      fill: none;
+    }
+
+    .state-outline {
+      stroke: darkgrey;
+      stroke-width: 2px;
+      fill: none;
+    }
   </style>
 </head>
 
@@ -10,11 +36,75 @@
   <h1>
     HW2
   </h1>
+  <svg id="chloroMap" height="800" width="800"></svg>
+
   <script>
-    async function requestData() {
+    async function makeChloro() {
+      let topo = await d3.json("us.json");
+
+      let states = topojson.feature(topo, topo.objects.states);
+      let statesMesh = topojson.mesh(topo, topo.objects.states);
+      let counties = topojson.feature(topo, topo.objects.counties);
+      let countiesMesh = topojson.mesh(topo, topo.objects.counties);
+
+      let map = d3.select("svg#chloroMap");
+      let w = map.attr("width");
+      let h = map.attr("height");
+      let projection = d3.geoAlbers().fitSize([w, h], states);
+      let path = d3.geoPath().projection(projection);
+
+      let viewport = map.append("g");
+
+      viewport.selectAll(".state").data(states.features)
+        .enter()
+        .append("path")
+        .attr("class", "state")
+        .attr("d", path);
+
+      viewport.append("path")
+        .datum(statesMesh)
+        .attr("class", "state-outline")
+        .attr("d", path);
+
+
+      viewport.selectAll(".county").data(counties.features)
+        .enter()
+        .append("path")
+        .attr("class", "county")
+        .attr("d", path);
+
+      viewport.append("path")
+        .datum(countiesMesh)
+        .attr("class", "county-outline")
+        .attr("d", path);
+
+
+
+
+      //zooming
+      var zoom = d3.zoom()
+        .scaleExtent([1, 20])
+        .translateExtent([[-50, -50], [w + 50, h + 50]])
+        .on("zoom", mapZoom);
+
+      map.call(zoom);
+      //to hide counties
+      map.call(zoom.transform, d3.zoomIdentity);
+
+      function mapZoom({ transform }) {
+        viewport.attr("transform", transform.toString());
+        viewport.select(".state-outline")
+          .style("stroke-width", 2 / transform.k);
+        viewport.select(".county-outline")
+          .style("stroke-width", 1 / transform.k);
+        viewport.select(".county-outline")
+          .attr("visibility", (transform.k > 3) ? "visible" : "hidden");
+        viewport.selectAll(".county")
+          .attr("visibility", (transform.k > 3) ? "visible" : "hidden");
+      }
 
     }
-    requestData();
+    makeChloro();
   </script>
 </body>
 
