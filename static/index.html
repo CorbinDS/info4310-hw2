@@ -14,18 +14,17 @@
     }
 
     .state {
-      fill: lightgrey;
       stroke: none;
     }
 
     .county-outline {
-      stroke: rgb(20, 20, 20);
+      stroke: rgb(255, 0, 0);
       stroke-width: 1px;
       fill: none;
     }
 
     .state-outline {
-      stroke: darkgrey;
+      stroke: black;
       stroke-width: 2px;
       fill: none;
     }
@@ -41,6 +40,38 @@
   <script>
     async function makeChloro() {
       let topo = await d3.json("us.json");
+      let filteredStates = ['78'];
+      topo.objects.states.geometries = topo.objects.states.geometries.filter(d => {
+        return filteredStates.indexOf(d.id.toString().padStart(2, '0')) === -1;
+      });
+
+      let disabilityData = await d3.csv("ACSST1Y2022.S1810-Data.csv");
+
+      disabilityData.forEach(d => {
+        d["FIPS_ID"] = Number(d["FIPS_ID"].substr(9));
+      });
+      // console.log(disabilityData);
+
+      fipsToStats = {};
+
+      disabilityData.forEach(d => {
+        fipsToStats[d["FIPS_ID"]] = d;
+      });
+
+      console.log(fipsToStats);
+
+      // console.log(topo);
+
+      let allPercentages = d3.map(disabilityData, d => {
+        return Number(d.percentPopDisability);
+
+      });
+
+      let percentageExtent = d3.extent(allPercentages);
+      let colorScale = d3.scaleOrdinal(percentageExtent, d3.schemeBlues[9]);
+
+      console.log(colorScale(10));
+
 
       let states = topojson.feature(topo, topo.objects.states);
       let statesMesh = topojson.mesh(topo, topo.objects.states);
@@ -78,9 +109,6 @@
         .attr("class", "county-outline")
         .attr("d", path);
 
-
-
-
       //zooming
       var zoom = d3.zoom()
         .scaleExtent([1, 20])
@@ -107,7 +135,19 @@
       viewport.selectAll(".state").on("click", mapClicked);
       viewport.selectAll(".county").on("click", mapClicked);
 
+      viewport.selectAll(".state")
+        .attr("fill", d => colorScale(Number(fipsToStats[d.id]["percentPopDisability"])));
+
+
+      // viewport.selectAll(".state").on("hover", stateHover);
+      // viewport.selectAll(".county").on("hover", stateHover);
+
+      function stateHover(event, d) {
+        console.log(d);
+      }
+
       function mapClicked(event, d) {
+        console.log(d);
         //d is the specific state or county clicked on
         let bounds = path.bounds(d.geometry);
 
