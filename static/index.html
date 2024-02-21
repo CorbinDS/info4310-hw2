@@ -24,8 +24,16 @@
     }
 
     .state-outline {
-      stroke: white;
+      stroke: rgb(255, 255, 255);
       fill: none;
+    }
+
+    .label {
+      user-select: none;
+    }
+
+    table {
+      border: 1px solid black;
     }
   </style>
 </head>
@@ -36,9 +44,54 @@
   </h1>
   <svg id="chloroMap" height="800" width="800"></svg>
   <svg id="legend" height="400" width="400"></svg>
+  <div id="table"></div>
   <script>
-    // hover effect
-    const labelRectangleHeight = 25;
+    /*  
+    =================== hover effect ===========================================
+    */
+    const labelRectangleHeight = 40;
+    const pixelsPerLetter = 10; //used to calculate width of rectangle
+    const areaNameFontSize = 14;
+    const percentageFontSize = 12;
+    /*
+    =================== color legends ==========================================
+    */
+    const stateLegendX = 75; //position from top left corner of the second svg. 
+    const stateLegendY = 100;
+
+    const countyLegendX = 250;
+    const countyLegendY = 100;
+
+    const boxHeight = 20;
+    const boxWidth = 20;
+    const boxSeperation = 25; //vertical distances between boxes
+    const boxTextSeperation = 25; //horizontal distance between start of the leftmost letter and the left of the box 
+    const textVerticalAdjustment = 15; //probably don't change this one unless you change font or font size
+
+
+    /*
+    ========================= table ============================================
+    */
+
+    const tablePropertyNames = ["Geography", "percentPopDisability"];
+    // start work here
+
+    function generateTable(locationObject) {
+      let div = document.getElementById("table");
+      console.log(div);
+
+      let tbl = document.createElement("table");
+
+      let header = tbl.insertRow();
+      for (let i = 0; i < tablePropertyNames.length; i++) {
+        let tr = tbl.insertRow();
+
+      }
+
+      div.appendChild(tbl);
+    }
+
+    generateTable({});
 
 
     async function makeChloro() {
@@ -81,7 +134,7 @@
 
 
       let percentageExtent = d3.extent(allPercentages);
-      let colorScaleState = d3.scaleQuantize(d3.extent(statePercentages), d3.schemeBlues[9]);
+      let colorScaleState = d3.scaleQuantize(d3.extent(statePercentages), d3.schemePurples[9]);
       let colorScaleCounty = d3.scaleQuantize(d3.extent(countyPercentages), d3.schemeBlues[9]);
 
       console.log(d3.schemeBlues[8]);
@@ -91,7 +144,7 @@
       let svg = d3.select("svg#legend");
       let legend = svg.append("g")
         .attr("class", "legend")
-        .attr("transform", "translate(75, 100)"); // Adjust x, y to position your legend
+        .attr("transform", `translate(${stateLegendX}, ${stateLegendY})`); // Adjust x, y to position your legend
 
       const numberOfSteps = colorScaleState.range().length;
       const legendData = colorScaleState.range().map((color, i) => {
@@ -111,9 +164,9 @@
         .append("rect")
         .attr("class", "legend-box")
         .attr("x", 0)
-        .attr("y", (d, i) => i * 25) // Adjust spacing between boxes
-        .attr("width", 20) // Adjust size of legend boxes
-        .attr("height", 20)
+        .attr("y", (d, i) => i * boxSeperation) // Adjust spacing between boxes
+        .attr("width", boxWidth) // Adjust size of legend boxes
+        .attr("height", boxHeight)
         .style("fill", d => d.color);
 
       // Add legend labels
@@ -122,14 +175,14 @@
         .enter()
         .append("text")
         .attr("class", "legend-label")
-        .attr("x", 25) // Adjust position relative to boxes
-        .attr("y", (d, i) => i * 25 + 15) // Align text with boxes
+        .attr("x", boxTextSeperation) // Adjust position relative to boxes
+        .attr("y", (d, i) => i * boxSeperation + textVerticalAdjustment) // Align text with boxes
         .text(d => `${d.minValue.toFixed(1)} - ${d.maxValue.toFixed(1)}`); // Format text labels for ranges
 
 
       let legend2 = svg.append("g")
         .attr("class", "legend")
-        .attr("transform", "translate(250, 100)"); // Adjust x, y to position your legend      const numberOfStepsCounty = colorScaleCounty.range().length;
+        .attr("transform", `translate(${countyLegendX}, ${countyLegendY})`); // Adjust x, y to position your legend      const numberOfStepsCounty = colorScaleCounty.range().length;
       const legendDataCounty = colorScaleCounty.range().map((color, i) => {
         const extent = colorScaleCounty.invertExtent(color);
         return {
@@ -147,9 +200,9 @@
         .append("rect")
         .attr("class", "legend-box")
         .attr("x", 0)
-        .attr("y", (d, i) => i * 25) // Adjust spacing between boxes
-        .attr("width", 20) // Adjust size of legend boxes
-        .attr("height", 20)
+        .attr("y", (d, i) => i * boxSeperation) // Adjust spacing between boxes
+        .attr("width", boxWidth) // Adjust size of legend boxes
+        .attr("height", boxHeight)
         .style("fill", d => d.color);
 
       // Add legend labels
@@ -158,8 +211,8 @@
         .enter()
         .append("text")
         .attr("class", "legend-label")
-        .attr("x", 25) // Adjust position relative to boxes
-        .attr("y", (d, i) => i * 25 + 15) // Align text with boxes
+        .attr("x", boxTextSeperation) // Adjust position relative to boxes
+        .attr("y", (d, i) => i * boxSeperation + textVerticalAdjustment) // Align text with boxes
         .text(d => `${d.minValue.toFixed(1)} - ${d.maxValue.toFixed(1)}`); // Format text labels for ranges
       // 
 
@@ -201,6 +254,16 @@
         .attr("class", "county-outline")
         .attr("d", path);
 
+      let areaLabel = viewport.append("g");
+      let areaLabelRect = areaLabel.append("rect").attr("class", "label");
+      let areaLabelName = areaLabel.append("text")
+        .attr("class", "label")
+        .style("font-size", `${areaNameFontSize}px`);
+      let areaLabelStat = areaLabel.append("text")
+        .attr("class", "label")
+        .style("font-size", `${percentageFontSize}px`);
+
+
       //zooming
       var zoom = d3.zoom()
         .scaleExtent([1, 20])
@@ -221,6 +284,21 @@
           .attr("visibility", (transform.k > 3) ? "visible" : "hidden");
         viewport.selectAll(".county")
           .attr("visibility", (transform.k > 3) ? "visible" : "hidden");
+
+
+        // hover label box
+        let newScale = Math.min(Math.max(1 / transform.k, 0.5), 1); // Example scaling factor, adjust as needed
+        let curWidth = areaLabelRect.attr("width");
+        let newWidth = curWidth * newScale; // Assuming defaultLabelBoxWidth is defined
+        let newHeight = labelRectangleHeight * newScale; // Assuming defaultLabelBoxHeight is defined
+        let newNameFontSize = areaNameFontSize * newScale; // Assuming defaultFontSize is defined
+
+
+        // areaLabelRect
+        //   .attr("width", newWidth)
+        //   .attr("height", newHeight);
+        // areaLabel.selectAll("text") // Assuming you have a way to select all text within areaLabel
+        //   .style("font-size", `${newNameFontSize}px`);
       }
 
 
@@ -246,10 +324,9 @@
         return colorScaleCounty(Number(stats.percentPopDisability));
       });
       viewport.selectAll(".state").on("mouseover", stateHover).on("mouseleave", stateUnhover);
+      viewport.selectAll(".county").on("mouseover", countyHover).on("mouseleave", countyUnhover);
 
-      let areaLabel = viewport.append("g");
-      let areaLabelRect = areaLabel.append("rect");
-      let areaLabelName = areaLabel.append("text");
+
 
       // viewport.selectAll(".county").on("mouseover", countyHover);
 
@@ -282,14 +359,22 @@
           .text(areaName)
           .attr("text-anchor", "middle")
           .attr("dominant-baseline", "middle")
-          .attr("x", (areaName.length * 10) / 2)
-          .attr("y", labelRectangleHeight / 2);
+          .attr("x", (areaName.length * pixelsPerLetter) / 2)
+          .attr("y", labelRectangleHeight / 3);
+
+        areaLabelStat
+          .text(fipsToStats[d.id]["percentPopDisability"] + "%")
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "middle")
+          .attr("x", (areaName.length * pixelsPerLetter) / 2)
+          .attr("y", 5 + 2 * labelRectangleHeight / 3);
+
         areaLabelRect
-          .attr("width", areaName.length * 10)
+          .attr("width", areaName.length * pixelsPerLetter)
           .attr("height", labelRectangleHeight)
           .attr("rx", 0)
           .attr("fill", "orangered")
-        areaLabel.attr("transform", `translate(${cx - dW / 2}, ${cy})`).raise();
+        areaLabel.attr("transform", `translate(${cx - dW / 2}, ${cy - dH})`).raise();
 
       }
 
@@ -307,6 +392,63 @@
         areaLabelName.text("");
         areaLabel.attr("visibility", "hidden");
       }
+
+      function countyHover(event, d) {
+        d3.select(this).raise()
+          .transition()
+          .duration(200)
+          .style("opacity", 1)
+          .style("stroke", "black")
+          .style("stroke-width", "3px");
+
+        let bounds = path.bounds(d.geometry);
+
+
+        let dW = bounds[1][0] - bounds[0][0];
+        let dH = bounds[1][1] - bounds[0][1];
+        let cx = (bounds[0][0] + bounds[1][0]) / 2;
+        let cy = (bounds[0][1] + bounds[1][1]) / 2;
+        areaLabel.attr("visibility", "visible");
+
+        let areaName = fipsToStats[d.id]["Geographic Area Name"];
+        areaLabelName
+          .text(areaName)
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "middle")
+          .attr("x", (areaName.length * pixelsPerLetter) / 2)
+          .attr("y", labelRectangleHeight / 3);
+
+        areaLabelStat
+          .text(fipsToStats[d.id]["percentPopDisability"] + "%")
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "middle")
+          .attr("x", (areaName.length * pixelsPerLetter) / 2)
+          .attr("y", 5 + 2 * labelRectangleHeight / 3);
+
+        areaLabelRect
+          .attr("width", areaName.length * pixelsPerLetter)
+          .attr("height", labelRectangleHeight)
+          .attr("rx", 0)
+          .attr("fill", "orangered")
+        areaLabel.attr("transform", `translate(${cx - 50}, ${cy - 50})`).raise();
+
+      }
+
+      function countyUnhover(event, d) {
+        d3.selectAll(".county")
+          .transition()
+          .duration(200)
+          .style("opacity", 1)
+        d3.select(this)
+          .transition()
+          .duration(200)
+          .style("opacity", 1)
+          .style("stroke", "none");
+
+        areaLabelName.text("");
+        areaLabel.attr("visibility", "hidden");
+      }
+
 
       function mapClicked(event, d) {
         console.log(d);
