@@ -6,10 +6,10 @@
   <style>
     svg {
       /* border: 1px black solid; */
+      background-color: lightgray;
     }
 
     .county {
-      fill: rgb(211, 211, 211);
       stroke: none;
     }
 
@@ -18,14 +18,13 @@
     }
 
     .county-outline {
-      stroke: rgb(255, 0, 0);
+      stroke: rgb(255, 255, 255);
       stroke-width: 1px;
       fill: none;
     }
 
     .state-outline {
-      stroke: black;
-      stroke-width: 2px;
+      stroke: white;
       fill: none;
     }
   </style>
@@ -36,41 +35,133 @@
     HW2
   </h1>
   <svg id="chloroMap" height="800" width="800"></svg>
-
+  <svg id="legend" height="400" width="400"></svg>
   <script>
+    // hover effect
+    const labelRectangleHeight = 25;
+
+
     async function makeChloro() {
       let topo = await d3.json("us.json");
-      let filteredStates = ['78'];
+      let filteredStates = ['72', '78'];
       topo.objects.states.geometries = topo.objects.states.geometries.filter(d => {
         return filteredStates.indexOf(d.id.toString().padStart(2, '0')) === -1;
       });
 
-      let disabilityData = await d3.csv("ACSST1Y2022.S1810-Data.csv");
+      let disabilityData = await d3.csv("ACSST5Y2022.S1810-Data.csv");
 
       disabilityData.forEach(d => {
-        d["FIPS_ID"] = Number(d["FIPS_ID"].substr(9));
+        d["Geography"] = Number(d["Geography"].substr(9));
+        d["percentPopDisability"] = Number(d["percentPopDisability"]);
       });
+
+
       // console.log(disabilityData);
 
       fipsToStats = {};
 
       disabilityData.forEach(d => {
-        fipsToStats[d["FIPS_ID"]] = d;
+        fipsToStats[d["Geography"]] = d;
       });
 
-      console.log(fipsToStats);
+      // console.log(fipsToStats);
 
       // console.log(topo);
 
       let allPercentages = d3.map(disabilityData, d => {
         return Number(d.percentPopDisability);
-
+      });
+      let statePercentages = disabilityData.map(d => {
+        if (!d["Geographic Area Name"].includes(",")) return d["percentPopDisability"];
       });
 
-      let percentageExtent = d3.extent(allPercentages);
-      let colorScale = d3.scaleOrdinal(percentageExtent, d3.schemeBlues[9]);
+      let countyPercentages = disabilityData.map(d => {
+        if (d["Geographic Area Name"].includes(",")) return d["percentPopDisability"];
+      });
 
-      console.log(colorScale(10));
+
+      let percentageExtent = d3.extent(allPercentages);
+      let colorScaleState = d3.scaleQuantize(d3.extent(statePercentages), d3.schemeBlues[9]);
+      let colorScaleCounty = d3.scaleQuantize(d3.extent(countyPercentages), d3.schemeBlues[9]);
+
+      console.log(d3.schemeBlues[8]);
+
+
+      //  
+      let svg = d3.select("svg#legend");
+      let legend = svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", "translate(75, 100)"); // Adjust x, y to position your legend
+
+      const numberOfSteps = colorScaleState.range().length;
+      const legendData = colorScaleState.range().map((color, i) => {
+        const extent = colorScaleState.invertExtent(color);
+        return {
+          color: color,
+          minValue: extent[0],
+          maxValue: extent[1]
+        };
+      });
+
+
+      // Draw legend boxes
+      legend.selectAll(".legend-box")
+        .data(legendData)
+        .enter()
+        .append("rect")
+        .attr("class", "legend-box")
+        .attr("x", 0)
+        .attr("y", (d, i) => i * 25) // Adjust spacing between boxes
+        .attr("width", 20) // Adjust size of legend boxes
+        .attr("height", 20)
+        .style("fill", d => d.color);
+
+      // Add legend labels
+      legend.selectAll(".legend-label")
+        .data(legendData)
+        .enter()
+        .append("text")
+        .attr("class", "legend-label")
+        .attr("x", 25) // Adjust position relative to boxes
+        .attr("y", (d, i) => i * 25 + 15) // Align text with boxes
+        .text(d => `${d.minValue.toFixed(1)} - ${d.maxValue.toFixed(1)}`); // Format text labels for ranges
+
+
+      let legend2 = svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", "translate(250, 100)"); // Adjust x, y to position your legend      const numberOfStepsCounty = colorScaleCounty.range().length;
+      const legendDataCounty = colorScaleCounty.range().map((color, i) => {
+        const extent = colorScaleCounty.invertExtent(color);
+        return {
+          color: color,
+          minValue: extent[0],
+          maxValue: extent[1]
+        };
+      });
+
+
+      // Draw legend boxes
+      legend2.selectAll(".legend-box")
+        .data(legendDataCounty)
+        .enter()
+        .append("rect")
+        .attr("class", "legend-box")
+        .attr("x", 0)
+        .attr("y", (d, i) => i * 25) // Adjust spacing between boxes
+        .attr("width", 20) // Adjust size of legend boxes
+        .attr("height", 20)
+        .style("fill", d => d.color);
+
+      // Add legend labels
+      legend2.selectAll(".legend-label")
+        .data(legendDataCounty)
+        .enter()
+        .append("text")
+        .attr("class", "legend-label")
+        .attr("x", 25) // Adjust position relative to boxes
+        .attr("y", (d, i) => i * 25 + 15) // Align text with boxes
+        .text(d => `${d.minValue.toFixed(1)} - ${d.maxValue.toFixed(1)}`); // Format text labels for ranges
+      // 
 
 
       let states = topojson.feature(topo, topo.objects.states);
@@ -90,6 +181,7 @@
         .enter()
         .append("path")
         .attr("class", "state")
+        .attr("id", d => d.id)
         .attr("d", path);
 
       viewport.append("path")
@@ -136,14 +228,84 @@
       viewport.selectAll(".county").on("click", mapClicked);
 
       viewport.selectAll(".state")
-        .attr("fill", d => colorScale(Number(fipsToStats[d.id]["percentPopDisability"])));
+        .attr("fill", d => {
+          let val = fipsToStats[d.id];
+          if (!val) {
+            console.error('No data for id:', d.id);
+            return '#000'; // Or any fallback color
+          }
+          return colorScaleState(Number(fipsToStats[d.id]["percentPopDisability"]))
+        });
+
+      viewport.selectAll(".county").attr("fill", d => {
+        const stats = fipsToStats[d.id];
+        if (!stats) {
+          // console.log("Missing data for ID:", d.id); // Log missing IDs
+          return "#000"; // Default color for missing data
+        }
+        return colorScaleCounty(Number(stats.percentPopDisability));
+      });
+      viewport.selectAll(".state").on("mouseover", stateHover).on("mouseleave", stateUnhover);
+
+      let areaLabel = viewport.append("g");
+      let areaLabelRect = areaLabel.append("rect");
+      let areaLabelName = areaLabel.append("text");
+
+      // viewport.selectAll(".county").on("mouseover", countyHover);
 
 
-      // viewport.selectAll(".state").on("hover", stateHover);
-      // viewport.selectAll(".county").on("hover", stateHover);
+
 
       function stateHover(event, d) {
-        console.log(d);
+        d3.selectAll(".state")
+          .transition()
+          .duration(200)
+          .style("opacity", .4);
+        d3.select(this).raise()
+          .transition()
+          .duration(200)
+          .style("opacity", 1)
+          .style("stroke", "black")
+          .style("stroke-width", "3px");
+
+        let bounds = path.bounds(d.geometry);
+
+
+        let dW = bounds[1][0] - bounds[0][0];
+        let dH = bounds[1][1] - bounds[0][1];
+        let cx = (bounds[0][0] + bounds[1][0]) / 2;
+        let cy = (bounds[0][1] + bounds[1][1]) / 2;
+        areaLabel.attr("visibility", "visible");
+
+        let areaName = fipsToStats[d.id]["Geographic Area Name"];
+        areaLabelName
+          .text(areaName)
+          .attr("text-anchor", "middle")
+          .attr("dominant-baseline", "middle")
+          .attr("x", (areaName.length * 10) / 2)
+          .attr("y", labelRectangleHeight / 2);
+        areaLabelRect
+          .attr("width", areaName.length * 10)
+          .attr("height", labelRectangleHeight)
+          .attr("rx", 0)
+          .attr("fill", "orangered")
+        areaLabel.attr("transform", `translate(${cx - dW / 2}, ${cy})`).raise();
+
+      }
+
+      function stateUnhover(event, d) {
+        d3.selectAll(".state")
+          .transition()
+          .duration(200)
+          .style("opacity", 1)
+        d3.select(this).lower()
+          .transition()
+          .duration(200)
+          .style("opacity", 1)
+          .style("stroke", "none");
+
+        areaLabelName.text("");
+        areaLabel.attr("visibility", "hidden");
       }
 
       function mapClicked(event, d) {
