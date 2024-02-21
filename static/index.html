@@ -6,7 +6,7 @@
   <style>
     svg {
       /* border: 1px black solid; */
-      background-color: lightgray;
+      background-color: rgb(255, 255, 255);
     }
 
     .county {
@@ -36,6 +36,10 @@
     table {
       border: 1px solid black;
     }
+
+    input[type="radio"].toggle {
+      display: none;
+    }
   </style>
 </head>
 
@@ -43,9 +47,87 @@
   <h1>
     HW2
   </h1>
-  <svg id="chloroMap" height="800" width="800"></svg>
+  <div id="filterButton">
+    <input type="radio" id="stateView" name="filterButton" value="state" checked><label for="stateView">State
+      View</label>
+    <input type="radio" id="countyView" name="filterButton" value="county"><label for="countyView">County View</label>
+  </div>
+  <svg id="chloroMap" height="600" width="1000"></svg>
   <svg id="legend" height="400" width="400"></svg>
-  <div id="table"></div>
+  <div id="tableDiv">
+    <table id="table">
+      <thead>
+        <tr id="header">
+          <th>Disability Type (ages)</th>
+          <th>%</th>
+          <th>MOE</th>
+          <th>Number</th>
+          <th>MOE</th>
+          <th>Base Population</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr id="row1">
+          <th>Any Disability (all ages)</td>
+          <td>10.1</td>
+          <td>±0.8</td>
+          <td>10,199</td>
+          <td>±799</td>
+          <td>101,394</td>
+        </tr>
+        <tr id="row2">
+          <th>Hearing (all ages)</td>
+          <td>2.5</td>
+          <td>±0.4</td>
+          <td>2,574</td>
+          <td>±359</td>
+          <td>101,394</td>
+        </tr>
+        <tr id="row3">
+          <th>Visual (all ages)</td>
+          <td>2.5</td>
+          <td>±0.4</td>
+          <td>2,574</td>
+          <td>±359</td>
+          <td>101,394</td>
+        </tr>
+        <tr id="row4">
+          <th>Cognitive (ages 5+)</td>
+          <td>2.5</td>
+          <td>±0.4</td>
+          <td>2,574</td>
+          <td>±359</td>
+          <td>101,394</td>
+        </tr>
+        <tr id="row5">
+          <th>Ambulatory (ages 5+)</td>
+          <td>2.5</td>
+          <td>±0.4</td>
+          <td>2,574</td>
+          <td>±359</td>
+          <td>101,394</td>
+        </tr>
+        <tr id="row6">
+          <th>Selfcare (ages 5+)</td>
+          <td>2.5</td>
+          <td>±0.4</td>
+          <td>2,574</td>
+          <td>±359</td>
+          <td>101,394</td>
+        </tr>
+        <tr id="row7">
+          <th>Independent Living (ages 18+)</td>
+          <td>2.5</td>
+          <td>±0.4</td>
+          <td>2,574</td>
+          <td>±359</td>
+          <td>101,394</td>
+        </tr>
+        <!-- Add more rows for each type of disability -->
+      </tbody>
+    </table>
+  </div>
+
   <script>
     /*  
     =================== hover effect ===========================================
@@ -74,36 +156,31 @@
     /*
     ========================= table ============================================
     */
+    // const tableLabels = [" Disability Type (ages)", "%", "MOE", "Number", "MOE", "Base Population"] const
+    //   tableHorizontalLabels = ["Any Disability (all ages)", "Hearing (all ages)", "Visual (all ages)"
+    //     , "Cognitive (ages 5+)", "Ambulatory (ages 5+)", "Selfcare (ages 5+)", "Independent Living (ages 18+)"]; const
+    //       tablePropertyNames = ["Geography", "percentPopDisability"]; // start work here function
 
-    const tablePropertyNames = ["Geography", "percentPopDisability"];
-    // start work here
+    // generateTable(locationObject);
+    function updateTable(dataObject) {
+      console.log(dataObject);
+      let tbody = d3.select("table#table tbody");
 
-    function generateTable(locationObject) {
-      let div = document.getElementById("table");
-      console.log(div);
+      let rows = tbody.selectAll("tr").data(dataObject);
 
-      let tbl = document.createElement("table");
+      rows.each(function (rowData) {
+        console.log(rowData);
+      });
 
-      let header = tbl.insertRow();
-      let first = header.insertCell();
 
-      for (let i = 0; i < tablePropertyNames.length; i++) {
-        let tr = tbl.insertRow();
-
-      }
-
-      div.appendChild(tbl);
     }
-
-    // generateTable({});
 
 
     async function makeChloro() {
-      let topo = await d3.json("us.json");
-      let filteredStates = ['72', '78'];
-      topo.objects.states.geometries = topo.objects.states.geometries.filter(d => {
-        return filteredStates.indexOf(d.id.toString().padStart(2, '0')) === -1;
-      });
+      let topo = await d3.json("us.json"); let
+        filteredStates = ['72', '78']; topo.objects.states.geometries = topo.objects.states.geometries.filter(d => {
+          return filteredStates.indexOf(d.id.toString().padStart(2, '0')) === -1;
+        });
 
       let disabilityData = await d3.csv("ACSST5Y2022.S1810-Data.csv");
 
@@ -113,13 +190,14 @@
       });
 
 
-      // console.log(disabilityData);
+      console.log(disabilityData);
 
       fipsToStats = {};
 
       disabilityData.forEach(d => {
         fipsToStats[d["Geography"]] = d;
       });
+
 
       // console.log(fipsToStats);
 
@@ -137,14 +215,21 @@
       });
 
 
+      let colors = ["#CFE1F2", "#B5D4E9", "#93C3DF", "#6DAED5", "#4B97C9", "#2F7EBC", "#1864AA", "#0A4A90", "#08306B"];
+
       let percentageExtent = d3.extent(allPercentages);
-      let colorScaleState = d3.scaleQuantize(d3.extent(statePercentages), d3.schemePurples[9]);
-      let colorScaleCounty = d3.scaleQuantize(d3.extent(countyPercentages), d3.schemeBlues[9]);
+      let adjustedPurple = d3.schemeBlues[9].slice(2);
+      console.log(adjustedPurple.slice(1));
 
-      console.log(d3.schemeBlues[8]);
+      let colorScaleState = d3.scaleQuantize(d3.extent(statePercentages), colors);
 
 
-      //  
+
+      let colorScaleCounty = d3.scaleQuantize(d3.extent(countyPercentages), colors);
+
+
+
+      //
       let svg = d3.select("svg#legend");
       let legend = svg.append("g")
         .attr("class", "legend")
@@ -159,6 +244,12 @@
           maxValue: extent[1]
         };
       });
+
+      svg.append("text")
+        .text("Prevalence Rate of Disability (%)")
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "middle")
+        .attr("transform", `translate(${200}, ${75})`);
 
 
       // Draw legend boxes
@@ -186,7 +277,8 @@
 
       let legend2 = svg.append("g")
         .attr("class", "legend")
-        .attr("transform", `translate(${countyLegendX}, ${countyLegendY})`); // Adjust x, y to position your legend      const numberOfStepsCounty = colorScaleCounty.range().length;
+        .attr("transform", `translate(${countyLegendX}, ${countyLegendY})`); // Adjust x, y to position your legend const
+      numberOfStepsCounty = colorScaleCounty.range().length;
       const legendDataCounty = colorScaleCounty.range().map((color, i) => {
         const extent = colorScaleCounty.invertExtent(color);
         return {
@@ -218,7 +310,7 @@
         .attr("x", boxTextSeperation) // Adjust position relative to boxes
         .attr("y", (d, i) => i * boxSeperation + textVerticalAdjustment) // Align text with boxes
         .text(d => `${d.minValue.toFixed(1)} - ${d.maxValue.toFixed(1)}`); // Format text labels for ranges
-      // 
+      //
 
 
       let states = topojson.feature(topo, topo.objects.states);
@@ -291,18 +383,18 @@
 
 
         // hover label box
-        let newScale = Math.min(Math.max(1 / transform.k, 0.5), 1); // Example scaling factor, adjust as needed
+        let newScale = Math.min(Math.max(1 / transform.k, 0.5), 1);
         let curWidth = areaLabelRect.attr("width");
-        let newWidth = curWidth * newScale; // Assuming defaultLabelBoxWidth is defined
-        let newHeight = labelRectangleHeight * newScale; // Assuming defaultLabelBoxHeight is defined
-        let newNameFontSize = areaNameFontSize * newScale; // Assuming defaultFontSize is defined
+        let newWidth = curWidth * newScale;
+        let newHeight = labelRectangleHeight * newScale;
+        let newNameFontSize = areaNameFontSize * newScale;
 
 
-        // areaLabelRect
-        //   .attr("width", newWidth)
-        //   .attr("height", newHeight);
-        // areaLabel.selectAll("text") // Assuming you have a way to select all text within areaLabel
-        //   .style("font-size", `${newNameFontSize}px`);
+        areaLabelRect
+          .attr("width", newWidth)
+          .attr("height", newHeight);
+        areaLabel.selectAll("text")
+          .style("font-size", `${newNameFontSize}px`);
       }
 
 
@@ -383,6 +475,10 @@
           .attr("fill", "orangered")
 
         areaLabel.attr("transform", `translate(${cx - areaLabelRect.attr("width") / 2}, ${ty})`).raise();
+
+        // table stuff
+
+        updateTable(fipsToStats[d.id]);
 
       }
 
