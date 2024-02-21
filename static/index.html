@@ -30,6 +30,7 @@
 
     .label {
       user-select: none;
+      pointer-events: none;
     }
 
     table {
@@ -53,6 +54,7 @@
     const pixelsPerLetter = 10; //used to calculate width of rectangle
     const areaNameFontSize = 14;
     const percentageFontSize = 12;
+    const labelVerticalAdjustment = 25;
     /*
     =================== color legends ==========================================
     */
@@ -83,6 +85,8 @@
       let tbl = document.createElement("table");
 
       let header = tbl.insertRow();
+      let first = header.insertCell();
+
       for (let i = 0; i < tablePropertyNames.length; i++) {
         let tr = tbl.insertRow();
 
@@ -91,7 +95,7 @@
       div.appendChild(tbl);
     }
 
-    generateTable({});
+    // generateTable({});
 
 
     async function makeChloro() {
@@ -225,7 +229,7 @@
       let map = d3.select("svg#chloroMap");
       let w = map.attr("width");
       let h = map.attr("height");
-      let projection = d3.geoAlbers().fitSize([w, h], states);
+      let projection = d3.geoAlbersUsa().fitSize([w, h], states);
       let path = d3.geoPath().projection(projection);
 
       let viewport = map.append("g");
@@ -345,14 +349,17 @@
           .style("stroke", "black")
           .style("stroke-width", "3px");
 
+        // label stuff
         let bounds = path.bounds(d.geometry);
 
 
         let dW = bounds[1][0] - bounds[0][0];
         let dH = bounds[1][1] - bounds[0][1];
         let cx = (bounds[0][0] + bounds[1][0]) / 2;
+        let ty = (bounds[0][1]) - labelVerticalAdjustment;
         let cy = (bounds[0][1] + bounds[1][1]) / 2;
         areaLabel.attr("visibility", "visible");
+
 
         let areaName = fipsToStats[d.id]["Geographic Area Name"];
         areaLabelName
@@ -374,7 +381,8 @@
           .attr("height", labelRectangleHeight)
           .attr("rx", 0)
           .attr("fill", "orangered")
-        areaLabel.attr("transform", `translate(${cx - dW / 2}, ${cy - dH})`).raise();
+
+        areaLabel.attr("transform", `translate(${cx - areaLabelRect.attr("width") / 2}, ${ty})`).raise();
 
       }
 
