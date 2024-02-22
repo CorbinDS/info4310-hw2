@@ -268,13 +268,14 @@
       </label>
     </div>
   </div>
-  <!-- CHOROPLETH LEGEND -->
-  <svg id="legend" height="200" width="400"></svg>
+
 
   <div class="flex-container">
     <div>
       <!-- CHOROPLETH -->
       <svg id="chloroMap" height="600" width="1000"></svg>
+      <!-- CHOROPLETH LEGEND -->
+      <svg id="legend" height="200" width="400" style="padding-left:300;"></svg>
     </div>
     <div>
       <!-- DATA TABLE -->
@@ -1433,6 +1434,7 @@
 
 
         areaLabelName.text("");
+        areaLabelStat.text("");
         areaLabel.attr("visibility", "hidden");
 
         d3.select("table#table").style("visibility", "hidden");

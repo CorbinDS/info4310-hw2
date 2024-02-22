@@ -5,7 +5,7 @@ app = Flask(__name__)
 app.wsgi_app = WhiteNoise(app.wsgi_app, root="static/", prefix="static/", index_file="index.html", autorefresh=True)
 @app.route('/', methods=['GET'])
 def hello():
-  return make_response("Add /static/ to go to my HW1 visualizations.")
+  return make_response("Add /static/ to go to our HW2 visualizations.")
 
 
 
