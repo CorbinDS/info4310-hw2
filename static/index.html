@@ -219,44 +219,52 @@
       ---------------------------- -->
   <div class="flex-container">
     <div>
+      <!-- BY DISABILITY TYPE -->
       <h3><span class="rate">DISABILITY PREVALENCE</span><br>By Disability Type</h3>
       <svg id="typePlot" height="350" width="480">
       </svg>
     </div>
     <div>
+      <!-- BY AGE -->
       <h3><span class="rate">DISABILITY PREVALENCE</span><br>By Age</h3>
       <svg id="agePlot" height="350" width="480">
       </svg>
     </div>
     <div>
+      <!-- BY RACE -->
       <h3><span class="rate">DISABILITY PREVALENCE</span><br>By Race</h3>
       <svg id="racePlot" height="350" width="480">
       </svg>
     </div>
   </div>
-
-  <!-- ----------------------------
-              CHOROPLETH & TABLE
-        ---------------------------- -->
   <div>
-    <h3><span class="rate">DISABILITY PREVALENCE</span><br>By State and County</h3>
+    <p>
+    FUN TIP: Click the chart labels to toggle dot visability on and off.<br>
+    NOTE: 2020 data is missing due to poor biased response rates during COVID.</p>
   </div>
+
+<!-- ----------------------------
+            CHOROPLETH & TABLE
+      ---------------------------- -->
+<div>
+  <h3><span class="rate">DISABILITY PREVALENCE</span><br>By State and County</h3>
+</div>
   
 <!-- STATE/COUNTY TOGGLE BUTTON -->
 <div id="radioBox">
-    <div id="filterButton">
-      <label>
-        <input type="radio" id="stateView" name="filterButton" value="state" checked>
-        <span>State View </span>
-      </label>
-      <label>
-        <input type="radio" id="countyView" name="filterButton" value="county">
-        <span>County View</span>
-      </label>
-    </div>
-  </div>      
-    <!-- CHOROPLETH LEGEND -->
-    <svg id="legend" height="200" width="400"></svg>
+  <div id="filterButton">
+    <label>
+      <input type="radio" id="stateView" name="filterButton" value="state" checked>
+      <span>State View </span>
+    </label>
+    <label>
+      <input type="radio" id="countyView" name="filterButton" value="county">
+      <span>County View</span>
+    </label>
+  </div>
+</div>      
+<!-- CHOROPLETH LEGEND -->
+<svg id="legend" height="200" width="400"></svg>
 
   <div class="flex-container">
     <div>
@@ -515,12 +523,13 @@
         .attr("cy", d => y(d.value))
         .attr("r", 6)
         .attr("stroke", "white")
+        
         // mouseover
         .on("mouseover", function(event, d) {
           let circle = d3.select(this)
           let parentData = d3.select(this.parentNode).datum() // get data from the parent of the circle which is the g tag
           circle.attr("stroke", "black")
-              .attr("stroke-width", "2")
+              .attr("stroke-width", "5")
           let xPos = x(d.time) // where the x is
           let yPos = y(d.value) // where the y is
           
@@ -532,7 +541,7 @@
           g.append("rect")
             .attr("x", 0)
             .attr("y", 0)
-            .attr("width", 80)
+            .attr("width", 110)
             .attr("height", 40)
             .attr("fill", "white")
             .attr("stroke", myColor(parentData.name))
@@ -543,7 +552,7 @@
           g.append("text")
             .attr("x", 5)
             .attr("y", 35)
-            .text("Value: " + d.value)            
+            .text("Rate (%): " + d.value)            
         })
         // mouseout
         .on("mouseout", function(event, d) {
@@ -656,7 +665,7 @@
       ageChartArea.selectAll("myLines")
         .data(dataReady)
         .join("path")
-        .attr("class", d => d.name)
+        //.attr("class", d => d.name)
         .attr("d", d => line(d.values))
         .attr("stroke", d => myColor(d.name))
         .attr("opacity", .3)
@@ -679,7 +688,46 @@
         .attr("cy", d => y(d.value))
         .attr("r", 6)
         .attr("stroke", "white")
-
+        // mouseover
+        .on("mouseover", function(event, d) {
+          let circle = d3.select(this)
+          let parentData = d3.select(this.parentNode).datum() // get data from the parent of the circle which is the g tag
+          circle.attr("stroke", "black")
+              .attr("stroke-width", "5")
+          let xPos = x(d.time) // where the x is
+          let yPos = y(d.value) // where the y is
+          
+          const formatTime = d3.utcFormat("%Y"); // format the date for the tooltip
+          let g = ageChartArea.append("g")
+            .attr("transform", `translate(${xPos}, ${yPos})`)
+            .attr("class", "mouseOverLabel")
+            .style("pointer-events", "none")
+          g.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", 110)
+            .attr("height", 40)
+            .attr("fill", "white")
+            .attr("stroke", myColor(parentData.name))
+          g.append("text")
+            .attr("x", 5)
+            .attr("y", 15)
+            .text("Year: " + formatTime(d.time))
+          g.append("text")
+            .attr("x", 5)
+            .attr("y", 35)
+            .text("Rate (%): " + d.value)            
+        })
+        // mouseout
+        .on("mouseout", function(event, d) {
+          let circle = d3.select(this)
+          let parentData = d3.select(this.parentNode).datum() // get data from the parent of the circle which is the g tag
+          circle.attr("stroke", "white")
+              .attr("stroke-width", "1")
+          ageChartArea.select(".mouseOverLabel").remove() // find the thing with the class and remove it
+        })
+        
+        
       // Add a legend (interactive)
       ageChartArea
         .selectAll("myLegend")
@@ -787,7 +835,7 @@
       raceChartArea.selectAll("myLines")
         .data(dataReady)
         .join("path")
-        .attr("class", d => d.name)
+        //.attr("class", d => d.name)
         .attr("d", d => line(d.values))
         .attr("stroke", d => myColor(d.name))
         .attr("opacity", .3)
@@ -810,6 +858,45 @@
         .attr("cy", d => y(d.value))
         .attr("r", 6)
         .attr("stroke", "white")
+
+        // mouseover
+        .on("mouseover", function(event, d) {
+          let circle = d3.select(this)
+          let parentData = d3.select(this.parentNode).datum() // get data from the parent of the circle which is the g tag
+          circle.attr("stroke", "black")
+              .attr("stroke-width", "5")
+          let xPos = x(d.time) // where the x is
+          let yPos = y(d.value) // where the y is
+          
+          const formatTime = d3.utcFormat("%Y"); // format the date for the tooltip
+          let g = raceChartArea.append("g")
+            .attr("transform", `translate(${xPos}, ${yPos})`)
+            .attr("class", "mouseOverLabel")
+            .style("pointer-events", "none")
+          g.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", 110)
+            .attr("height", 40)
+            .attr("fill", "white")
+            .attr("stroke", myColor(parentData.name))
+          g.append("text")
+            .attr("x", 5)
+            .attr("y", 15)
+            .text("Year: " + formatTime(d.time))
+          g.append("text")
+            .attr("x", 5)
+            .attr("y", 35)
+            .text("Rate (%): " + d.value)            
+        })
+        // mouseout
+        .on("mouseout", function(event, d) {
+          let circle = d3.select(this)
+          let parentData = d3.select(this.parentNode).datum() // get data from the parent of the circle which is the g tag
+          circle.attr("stroke", "white")
+              .attr("stroke-width", "1")
+          raceChartArea.select(".mouseOverLabel").remove() // find the thing with the class and remove it
+        })
 
       // Add a legend (interactive)
       raceChartArea
@@ -1201,14 +1288,12 @@
         .attr("d", path);
 
       let areaLabel = map.append("g").style("pointer-events", "none");
-      let areaLabelRect = areaLabel.append("rect")
-        .attr("stroke", "black");
+      let areaLabelRect = areaLabel.append("rect");
 
       const trianglePoints = [[-10, 0], [10, 0], [0, 20]]
       let areaLabelTriangle = areaLabel.append("polygon")
         .attr("points", trianglePoints.map(point => point.join(",")).join(" "))
         .style("fill", "orangered")
-        .style("stroke", "black")
         .style("stroke-width", 1);
       let areaLabelName = areaLabel.append("text")
         .attr("class", "arealabel")
@@ -1313,7 +1398,7 @@
           //.transition()
           //.duration(200)
           .style("opacity", 1)
-          .style("stroke", "black")
+          .style("stroke", "orangered")
           .style("stroke-width", "3px");
 
 
@@ -1387,8 +1472,7 @@
           // .transition()
           // .duration(200)
           .style("opacity", 1)
-          .style("stroke", "black")
-          .style("stroke-width", "3px");
+          .style("stroke", "orangered");
 
         let bounds = path.bounds(d.geometry);
         let transform = d3.zoomTransform(map.node());
