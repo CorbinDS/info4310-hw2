@@ -211,14 +211,6 @@
           <td>101,394</td>
         </tr>
         <tr id="row2">
-          <th>Any Disability (18 - 64)</td>
-          <td>10.1</td>
-          <td>±0.8</td>
-          <td>10,199</td>
-          <td>±799</td>
-          <td>101,394</td>
-        </tr>
-        <tr id="row3">
           <th>Hearing (under 18)</td>
           <td>2.5</td>
           <td>±0.4</td>
@@ -226,7 +218,7 @@
           <td>±359</td>
           <td>101,394</td>
         </tr>
-        <tr id="row4">
+        <tr id="row3">
           <th>Hearing (18 - 64)</td>
           <td>2.5</td>
           <td>±0.4</td>
@@ -234,7 +226,7 @@
           <td>±359</td>
           <td>101,394</td>
         </tr>
-        <tr id="row5">
+        <tr id="row4">
           <th>Visual (under 18)</td>
           <td>2.5</td>
           <td>±0.4</td>
@@ -242,7 +234,7 @@
           <td>±359</td>
           <td>101,394</td>
         </tr>
-        <tr id="row6">
+        <tr id="row5">
           <th>Visual (18 - 64)</td>
           <td>2.5</td>
           <td>±0.4</td>
@@ -250,7 +242,7 @@
           <td>±359</td>
           <td>101,394</td>
         </tr>
-        <tr id="row7">
+        <tr id="row6">
           <th>Cognitive (under 18)</td>
           <td>2.5</td>
           <td>±0.4</td>
@@ -258,7 +250,7 @@
           <td>±359</td>
           <td>101,394</td>
         </tr>
-        <tr id="row8">
+        <tr id="row7">
           <th>Cognitive (18 - 64)</td>
           <td>2.5</td>
           <td>±0.4</td>
@@ -266,7 +258,7 @@
           <td>±359</td>
           <td>101,394</td>
         </tr>
-        <tr id="row9">
+        <tr id="row8">
           <th>Ambulatory (under 18)</td>
           <td>2.5</td>
           <td>±0.4</td>
@@ -274,7 +266,7 @@
           <td>±359</td>
           <td>101,394</td>
         </tr>
-        <tr id="row10">
+        <tr id="row9">
           <th>Ambulatory (18 - 64)</td>
           <td>2.5</td>
           <td>±0.4</td>
@@ -282,7 +274,7 @@
           <td>±359</td>
           <td>101,394</td>
         </tr>
-        <tr id="row11">
+        <tr id="row10">
           <th>Selfcare (under 18)</td>
           <td>2.5</td>
           <td>±0.4</td>
@@ -290,7 +282,7 @@
           <td>±359</td>
           <td>101,394</td>
         </tr>
-        <tr id="row12">
+        <tr id="row11">
           <th>Selfcare (18 - 64)</td>
           <td>2.5</td>
           <td>±0.4</td>
@@ -298,15 +290,7 @@
           <td>±359</td>
           <td>101,394</td>
         </tr>
-        <tr id="row13">
-          <th>Independent Living (under 18)</td>
-          <td>2.5</td>
-          <td>±0.4</td>
-          <td>2,574</td>
-          <td>±359</td>
-          <td>101,394</td>
-        </tr>
-        <tr id="row13">
+        <tr id="row12">
           <th>Independent Living (18 - 64)</td>
           <td>2.5</td>
           <td>±0.4</td>
@@ -384,7 +368,7 @@
       });
 
       // console
-      console.log(dataReady)
+      // console.log(dataReady)
 
       // Color Scale: one color for each group
       const myColor = d3.scaleOrdinal()
@@ -506,11 +490,11 @@
           values: data.map(function (d) {
             return { time: d.time, value: +d[grpName] };
           })
-        };
+        }; u
       });
 
       // console
-      console.log(dataReady)
+      // console.log(dataReady)
 
       // Color Scale: one color for each group
       const myColor = d3.scaleOrdinal()
@@ -641,7 +625,7 @@
       });
 
       // console
-      console.log(dataReady)
+      // console.log(dataReady)
 
       // Color Scale: one color for each group
       const myColor = d3.scaleOrdinal()
@@ -742,7 +726,7 @@
     const stateLegendX = 75; //position from top left corner of the second svg. 
     const stateLegendY = 100;
 
-    const countyLegendX = 250;
+    const countyLegendX = 75;
     const countyLegendY = 100;
 
     const boxHeight = 20;
@@ -755,26 +739,119 @@
     /*
     ========================= table ============================================
     */
-    // const tableLabels = [" Disability Type (ages)", "%", "MOE", "Number", "MOE", "Base Population"] const
-    //   tableHorizontalLabels = ["Any Disability (all ages)", "Hearing (all ages)", "Visual (all ages)"
-    //     , "Cognitive (ages 5+)", "Ambulatory (ages 5+)", "Selfcare (ages 5+)", "Independent Living (ages 18+)"]; const
-    //       tablePropertyNames = ["Geography", "percentPopDisability"]; // start work here function
 
-    // generateTable(locationObject);
 
-    const tableRowMap = [""];
+
+    const row1 = [
+      "Estimate!!Percent with a disability!!Total civilian noninstitutionalized population",
+      "Margin of Error!!Percent with a disability!!Total civilian noninstitutionalized population",
+      "Estimate!!With a disability!!Total civilian noninstitutionalized population",
+      "Margin of Error!!With a disability!!Total civilian noninstitutionalized population",
+      "Estimate!!Total!!Total civilian noninstitutionalized population"];
+    // Estimate!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a hearing difficulty
+
+    const row2 = [
+      "Estimate!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a hearing difficulty!!Population under 18 years",
+      "Margin of Error!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a hearing difficulty!!Population under 18 years",
+      "Estimate!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a hearing difficulty!!Population under 18 years",
+      "Margin of Error!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a hearing difficulty!!Population under 18 years",
+      "Estimate!!Total!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a hearing difficulty!!Population under 18 years"];
+
+    const row3 = [
+      "Estimate!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a hearing difficulty!!Population 18 to 64 years",
+      "Margin of Error!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a hearing difficulty!!Population 18 to 64 years",
+      "Estimate!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a hearing difficulty!!Population 18 to 64 years",
+      "Margin of Error!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a hearing difficulty!!Population 18 to 64 years",
+      "Estimate!!Total!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a vision difficulty!!Population 18 to 64 years"];
+
+    const row4 = [
+      "Estimate!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a vision difficulty!!Population under 18 years",
+      "Margin of Error!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a vision difficulty!!Population under 18 years",
+      "Estimate!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a vision difficulty!!Population under 18 years",
+      "Margin of Error!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a vision difficulty!!Population under 18 years"
+    ];
+
+
+    const row5 = [
+      "Estimate!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a vision difficulty!!Population 18 to 64 years",
+      "Margin of Error!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a vision difficulty!!Population 18 to 64 years",
+      "Estimate!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a vision difficulty!!Population 18 to 64 years",
+      "Margin of Error!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a vision difficulty!!Population 18 to 64 years"
+    ];
+
+    const row6 = [
+      "Estimate!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a cognitive difficulty!!Population under 18 years",
+      "Margin of Error!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a cognitive difficulty!!Population under 18 years",
+      "Estimate!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a cognitive difficulty!!Population under 18 years",
+      "Margin of Error!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a cognitive difficulty!!Population under 18 years"
+    ];
+
+    const row7 = [
+      "Estimate!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a cognitive difficulty!!Population 18 to 64 years",
+      "Margin of Error!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a cognitive difficulty!!Population 18 to 64 years",
+      "Estimate!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a cognitive difficulty!!Population 18 to 64 years",
+      "Margin of Error!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a cognitive difficulty!!Population 18 to 64 years"
+    ];
+
+    const row8 = [
+      "Estimate!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With an ambulatory difficulty!!Population under 18 years",
+      "Margin of Error!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With an ambulatory difficulty!!Population under 18 years",
+      "Estimate!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With an ambulatory difficulty!!Population under 18 years",
+      "Margin of Error!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With an ambulatory difficulty!!Population under 18 years"
+    ];
+
+
+    const row9 = [
+      "Estimate!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With an ambulatory difficulty!!Population 18 to 64 years",
+      "Margin of Error!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With an ambulatory difficulty!!Population 18 to 64 years",
+      "Estimate!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With an ambulatory difficulty!!Population 18 to 64 years",
+      "Margin of Error!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With an ambulatory difficulty!!Population 18 to 64 years"
+    ];
+
+    const row10 = [
+      "Estimate!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a self-care difficulty!!Population under 18 years",
+      "Margin of Error!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a self-care difficulty!!Population under 18 years",
+      "Estimate!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a self-care difficulty!!Population under 18 years",
+      "Margin of Error!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a self-care difficulty!!Population under 18 years"
+    ];
+
+    const row11 = [
+      "Estimate!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a self-care difficulty!!Population 18 to 64 years",
+      "Margin of Error!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a self-care difficulty!!Population 18 to 64 years",
+      "Estimate!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a self-care difficulty!!Population 18 to 64 years",
+      "Margin of Error!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With a self-care difficulty!!Population 18 to 64 years"
+    ];
+
+    const row12 = [
+      "Estimate!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With an independent living difficulty!!Population 18 to 64 years",
+      "Margin of Error!!Percent with a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With an independent living difficulty!!Population 18 to 64 years",
+      "Estimate!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With an independent living difficulty!!Population 18 to 64 years",
+      "Margin of Error!!With a disability!!Total civilian noninstitutionalized population!!DISABILITY TYPE BY DETAILED AGE!!With an independent living difficulty!!Population 18 to 64 years"
+    ];
+
+    const tableKeys = [row1, row2, row3, row4, row5, row6, row7, row8, row9, row10, row11, row12];
+
+
+
     function updateTable(dataObject) {
-      console.log(dataObject);
       let tbody = d3.select("table#table tbody");
-
-
-
       let rows = tbody.selectAll("tr");
-      console.log(rows);
       rows.each(function (_, rowIndex) {
-        let cells = rows.selectAll("td");
+        let cells = d3.select(this).selectAll("td");
         cells.each(function (_, cellIndex) {
+          let cell = d3.select(this);
+          let propertyName = tableKeys[rowIndex][cellIndex];
 
+
+          if (propertyName == undefined) {
+            if (rowIndex % 2 == 0) {
+              propertyName = tableKeys[1][cellIndex];
+            } else {
+              propertyName = tableKeys[2][cellIndex];
+
+            }
+          }
+          cell.text(dataObject[propertyName]);
         });
       });
 
@@ -782,7 +859,8 @@
 
 
 
-
+    d3.select("table#table").style("visibility", "hidden");
+    let countyMode = false;
 
     async function makeChloro() {
       let topo = await d3.json("us.json"); let
@@ -794,11 +872,11 @@
 
       disabilityData.forEach(d => {
         d["Geography"] = Number(d["Geography"].substr(9));
-        d["percentPopDisability"] = Number(d["percentPopDisability"]);
+        d["Estimate!!Percent with a disability!!Total civilian noninstitutionalized population"] = Number(d["Estimate!!Percent with a disability!!Total civilian noninstitutionalized population"]);
       });
 
 
-      console.log(disabilityData);
+      // console.log(disabilityData);
 
       fipsToStats = {};
 
@@ -807,19 +885,16 @@
       });
 
 
-      // console.log(fipsToStats);
-
-      // console.log(topo);
-
+      // for a combined scale if wanted
       let allPercentages = d3.map(disabilityData, d => {
-        return Number(d.percentPopDisability);
+        return Number(d["Estimate!!Percent with a disability!!Total civilian noninstitutionalized population"]);
       });
       let statePercentages = disabilityData.map(d => {
-        if (!d["Geographic Area Name"].includes(",")) return d["percentPopDisability"];
+        if (!d["Geographic Area Name"].includes(",")) return d["Estimate!!Percent with a disability!!Total civilian noninstitutionalized population"];
       });
 
       let countyPercentages = disabilityData.map(d => {
-        if (d["Geographic Area Name"].includes(",")) return d["percentPopDisability"];
+        if (d["Geographic Area Name"].includes(",")) return d["Estimate!!Percent with a disability!!Total civilian noninstitutionalized population"];
       });
 
 
@@ -829,15 +904,19 @@
       let adjustedPurple = d3.schemeBlues[9].slice(2);
 
       let colorScaleState = d3.scaleQuantize(d3.extent(statePercentages), colors);
-
-
-
       let colorScaleCounty = d3.scaleQuantize(d3.extent(countyPercentages), colors);
 
 
 
       //
+
       let svg = d3.select("svg#legend");
+
+      svg.append("text")
+        .text("Prevalence Rate of Disability (%)")
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "middle")
+        .attr("transform", `translate(${200}, ${75})`);
       let legend = svg.append("g")
         .attr("class", "legend")
         .attr("transform", `translate(${stateLegendX}, ${stateLegendY})`); // Adjust x, y to position your legend
@@ -852,11 +931,7 @@
         };
       });
 
-      svg.append("text")
-        .text("Prevalence Rate of Disability (%)")
-        .attr("text-anchor", "middle")
-        .attr("dominant-baseline", "middle")
-        .attr("transform", `translate(${200}, ${75})`);
+
 
 
       // Draw legend boxes
@@ -884,7 +959,8 @@
 
       let legend2 = svg.append("g")
         .attr("class", "legend")
-        .attr("transform", `translate(${countyLegendX}, ${countyLegendY})`); // Adjust x, y to position your legend const
+        .attr("transform", `translate(${countyLegendX}, ${countyLegendY})`)
+        .style("display", "none");
       numberOfStepsCounty = colorScaleCounty.range().length;
       const legendDataCounty = colorScaleCounty.range().map((color, i) => {
         const extent = colorScaleCounty.invertExtent(color);
@@ -918,6 +994,16 @@
         .attr("y", (d, i) => i * boxSeperation + textVerticalAdjustment) // Align text with boxes
         .text(d => `${d.minValue.toFixed(1)} - ${d.maxValue.toFixed(1)}`); // Format text labels for ranges
       //
+
+      function showCountyLegend() {
+        legend.style("display", "none");
+        legend2.style("display", null);
+      }
+
+      function showStateLegend() {
+        legend.style("display", null);
+        legend2.style("display", "none");
+      }
 
 
       let states = topojson.feature(topo, topo.objects.states);
@@ -988,6 +1074,15 @@
         viewport.selectAll(".county")
           .attr("visibility", (transform.k > 3) ? "visible" : "hidden");
 
+        console.log(transform.k);
+
+        if (transform.k > 3) {
+          showCountyLegend();
+          stateUnhover();
+        } else if (!countyMode) {
+          showStateLegend();
+          // countyUnhover(); 
+        }
 
         // hover label box
         let newScale = Math.min(Math.max(1 / transform.k, 0.5), 1);
@@ -1015,7 +1110,7 @@
             console.error('No data for id:', d.id);
             return '#000'; // Or any fallback color
           }
-          return colorScaleState(Number(fipsToStats[d.id]["percentPopDisability"]))
+          return colorScaleState(Number(fipsToStats[d.id]["Estimate!!Percent with a disability!!Total civilian noninstitutionalized population"]))
         });
 
       viewport.selectAll(".county").attr("fill", d => {
@@ -1024,7 +1119,7 @@
           // console.log("Missing data for ID:", d.id); // Log missing IDs
           return "#000"; // Default color for missing data
         }
-        return colorScaleCounty(Number(stats.percentPopDisability));
+        return colorScaleCounty(Number(stats["Estimate!!Percent with a disability!!Total civilian noninstitutionalized population"]));
       });
       viewport.selectAll(".state").on("mouseover", stateHover).on("mouseleave", stateUnhover);
       viewport.selectAll(".county").on("mouseover", countyHover).on("mouseleave", countyUnhover);
@@ -1069,7 +1164,7 @@
           .attr("y", labelRectangleHeight / 3);
 
         areaLabelStat
-          .text(fipsToStats[d.id]["percentPopDisability"] + "%")
+          .text(fipsToStats[d.id]["Estimate!!Percent with a disability!!Total civilian noninstitutionalized population"] + "%")
           .attr("text-anchor", "middle")
           .attr("dominant-baseline", "middle")
           .attr("x", (areaName.length * pixelsPerLetter) / 2)
@@ -1084,24 +1179,27 @@
         areaLabel.attr("transform", `translate(${cx - areaLabelRect.attr("width") / 2}, ${ty})`).raise();
 
         // table stuff
-
+        d3.select("table#table").style("visibility", "visible");
         updateTable(fipsToStats[d.id]);
 
       }
 
       function stateUnhover(event, d) {
-        d3.selectAll(".state")
-          .transition()
-          .duration(200)
-          .style("opacity", 1)
-        d3.select(this).lower()
+        d3.selectAll(".state").lower()
           .transition()
           .duration(200)
           .style("opacity", 1)
           .style("stroke", "none");
+        // d3.select(this).lower()
+        //   .transition()
+        //   .duration(200)
+        //   .style("opacity", 1)
+        //   .style("stroke", "none");
 
         areaLabelName.text("");
         areaLabel.attr("visibility", "hidden");
+
+        d3.select("table#table").style("visibility", "hidden");
       }
 
       function countyHover(event, d) {
@@ -1130,7 +1228,7 @@
           .attr("y", labelRectangleHeight / 3);
 
         areaLabelStat
-          .text(fipsToStats[d.id]["percentPopDisability"] + "%")
+          .text(fipsToStats[d.id]["Estimate!!Percent with a disability!!Total civilian noninstitutionalized population"] + "%")
           .attr("text-anchor", "middle")
           .attr("dominant-baseline", "middle")
           .attr("x", (areaName.length * pixelsPerLetter) / 2)
@@ -1143,6 +1241,10 @@
           .attr("fill", "orangered")
         areaLabel.attr("transform", `translate(${cx - 50}, ${cy - 50})`).raise();
 
+        //
+        d3.select("table#table").style("visibility", "visible");
+        updateTable(fipsToStats[d.id]);
+
       }
 
       function countyUnhover(event, d) {
@@ -1150,14 +1252,20 @@
           .transition()
           .duration(200)
           .style("opacity", 1)
-        d3.select(this)
-          .transition()
-          .duration(200)
-          .style("opacity", 1)
           .style("stroke", "none");
+
+        // d3.select(this)
+        //   .transition()
+        //   .duration(200)
+        //   .style("opacity", 1)
+        //   .style("stroke", "none");
 
         areaLabelName.text("");
         areaLabel.attr("visibility", "hidden");
+
+
+        d3.select("table#table").style("visibility", "hidden");
+
       }
 
 
