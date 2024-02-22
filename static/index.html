@@ -192,8 +192,9 @@
       View</label>
     <input type="radio" id="countyView" name="filterButton" value="county"><label for="countyView">County View</label>
   </div>
+  <svg id="legend" height="200" width="400"></svg>
+
   <svg id="chloroMap" height="600" width="1000"></svg>
-  <svg id="legend" height="400" width="400"></svg>
   <div id="tableDiv">
     <table id="table">
       <thead>
@@ -868,6 +869,8 @@
     let countyMode = false;
 
     async function makeChloro() {
+      d3.selectAll("input[name='filterButton']").on("change", toggleView);
+
       let topo = await d3.json("us.json"); let
         filteredStates = ['72', '78']; topo.objects.states.geometries = topo.objects.states.geometries.filter(d => {
           return filteredStates.indexOf(d.id.toString().padStart(2, '0')) === -1;
@@ -910,11 +913,11 @@
 
       let colorScaleState = d3.scaleQuantize(d3.extent(statePercentages), colors);
       let colorScaleCounty = d3.scaleQuantize(d3.extent(countyPercentages), colors);
-
-
-
-      //
-
+      // 
+      // 
+      // Legend Stuff
+      // 
+      // 
       let svg = d3.select("svg#legend");
 
       const numberOfSteps = colorScaleState.range().length;
@@ -1107,10 +1110,14 @@
           .style("stroke-width", 2 / transform.k);
         viewport.select(".county-outline")
           .style("stroke-width", 1 / transform.k);
-        viewport.select(".county-outline")
-          .attr("visibility", (transform.k > 3) ? "visible" : "hidden");
-        viewport.selectAll(".county")
-          .attr("visibility", (transform.k > 3) ? "visible" : "hidden");
+
+        if (!countyMode) {
+          viewport.select(".county-outline")
+            .attr("visibility", (transform.k > 3) ? "visible" : "hidden");
+          viewport.selectAll(".county")
+            .attr("visibility", (transform.k > 3) ? "visible" : "hidden");
+        }
+
 
         console.log(transform.k);
 
@@ -1123,18 +1130,18 @@
         }
 
         // hover label box
-        let newScale = Math.min(Math.max(1 / transform.k, 0.5), 1);
-        let curWidth = areaLabelRect.attr("width");
-        let newWidth = curWidth * newScale;
-        let newHeight = labelRectangleHeight * newScale;
-        let newNameFontSize = areaNameFontSize * newScale;
+        // let newScale = Math.min(Math.max(1 / transform.k, 0.5), 1);
+        // let curWidth = areaLabelRect.attr("width");
+        // let newWidth = curWidth * newScale;
+        // let newHeight = labelRectangleHeight * newScale;
+        // let newNameFontSize = areaNameFontSize * newScale;
 
 
-        areaLabelRect
-          .attr("width", newWidth)
-          .attr("height", newHeight);
-        areaLabel.selectAll("text")
-          .style("font-size", `${newNameFontSize} px`);
+        // areaLabelRect
+        //   .attr("width", newWidth)
+        //   .attr("height", newHeight);
+        // areaLabel.selectAll("text")
+        //   .style("font-size", `${newNameFontSize} px`);
       }
 
 
@@ -1329,6 +1336,28 @@
         map.transition().duration(1000).call(zoom.transform, newTransform);
 
       }
+      //<div id="filterButton">
+      //   <input type="radio" id="stateView" name="filterButton" value="state" checked><label for="stateView">State
+      //     View</label>
+      //   <input type="radio" id="countyView" name="filterButton" value="county"><label for="countyView">County View</label>
+      // </div>
+      function toggleView(event) {
+        let selectedValue = d3.select(this).property("value");
+        countyMode = selectedValue == "county";
+
+        if (countyMode) {
+          viewport.select(".county-outline")
+            .attr("visibility", "visible");
+          viewport.selectAll(".county")
+            .attr("visibility", "visible");
+
+          showCountyLegend();
+        } else {
+          map.call(zoom.transform, d3.zoomIdentity);
+        }
+
+      }
+
     }
     makeChloro();
   </script>
