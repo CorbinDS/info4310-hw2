@@ -43,6 +43,11 @@
       border: 1px solid black;
     }
 
+    .legend-lines {
+      stroke: black;
+      stroke-width: 2px;
+    }
+
     input[type="radio"].toggle {
       display: none;
     }
@@ -723,18 +728,18 @@
     /*
     =================== color legends ==========================================
     */
-    const stateLegendX = 75; //position from top left corner of the second svg. 
+    const stateLegendX = 25; //position from top left corner of the second svg. 
     const stateLegendY = 100;
 
-    const countyLegendX = 75;
+    const countyLegendX = 25;
     const countyLegendY = 100;
 
     const boxHeight = 20;
-    const boxWidth = 20;
-    const boxSeperation = 25; //vertical distances between boxes
+    const boxWidth = 40;
+    // const boxSeperation = 25; //vertical distances between boxes
     const boxTextSeperation = 25; //horizontal distance between start of the leftmost letter and the left of the box 
     const textVerticalAdjustment = 15; //probably don't change this one unless you change font or font size
-
+    const extraLineHeight = 10;
 
     /*
     ========================= table ============================================
@@ -912,15 +917,6 @@
 
       let svg = d3.select("svg#legend");
 
-      svg.append("text")
-        .text("Prevalence Rate of Disability (%)")
-        .attr("text-anchor", "middle")
-        .attr("dominant-baseline", "middle")
-        .attr("transform", `translate(${200}, ${75})`);
-      let legend = svg.append("g")
-        .attr("class", "legend")
-        .attr("transform", `translate(${stateLegendX}, ${stateLegendY})`); // Adjust x, y to position your legend
-
       const numberOfSteps = colorScaleState.range().length;
       const legendData = colorScaleState.range().map((color, i) => {
         const extent = colorScaleState.invertExtent(color);
@@ -932,6 +928,16 @@
       });
 
 
+      svg.append("text")
+        .text("Prevalence Rate of Disability (%)")
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "middle")
+        .style("user-select", "none")
+        .attr("transform", `translate(${numberOfSteps * boxWidth / 2}, ${75})`);
+      let legend = svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", `translate(${stateLegendX}, ${stateLegendY})`); // Adjust x, y to position your legend
+
 
 
       // Draw legend boxes
@@ -940,9 +946,9 @@
         .enter()
         .append("rect")
         .attr("class", "legend-box")
-        .attr("x", 0)
-        .attr("y", (d, i) => i * boxSeperation) // Adjust spacing between boxes
-        .attr("width", boxWidth) // Adjust size of legend boxes
+        .attr("x", (d, i) => i * boxWidth)
+        .attr("y", 0)
+        .attr("width", boxWidth)
         .attr("height", boxHeight)
         .style("fill", d => d.color);
 
@@ -952,10 +958,25 @@
         .enter()
         .append("text")
         .attr("class", "legend-label")
-        .attr("x", boxTextSeperation) // Adjust position relative to boxes
-        .attr("y", (d, i) => i * boxSeperation + textVerticalAdjustment) // Align text with boxes
-        .text(d => `${d.minValue.toFixed(1)} - ${d.maxValue.toFixed(1)}`); // Format text labels for ranges
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "hanging")
+        .style("user-select", "none")
+        .attr("x", (d, i) => i * boxWidth) // Adjust position relative to boxes
+        .attr("y", boxHeight + extraLineHeight) // Align text with boxes
+        .text((d, i) => {
+          if (i == numberOfSteps - 1) return `${d.minValue.toFixed(1)}`;
+          return `${d.minValue.toFixed(1)}`;
+        });
 
+      legend.selectAll(".legend-lines")
+        .data(legendData)
+        .enter()
+        .append("line")
+        .attr("class", "legend-lines")
+        .attr("x1", (d, i) => i * boxWidth)
+        .attr("x2", (d, i) => i * boxWidth)
+        .attr("y1", 0)
+        .attr("y2", boxHeight + extraLineHeight);
 
       let legend2 = svg.append("g")
         .attr("class", "legend")
@@ -978,9 +999,9 @@
         .enter()
         .append("rect")
         .attr("class", "legend-box")
-        .attr("x", 0)
-        .attr("y", (d, i) => i * boxSeperation) // Adjust spacing between boxes
-        .attr("width", boxWidth) // Adjust size of legend boxes
+        .attr("x", (d, i) => i * boxWidth)
+        .attr("y", 0)
+        .attr("width", boxWidth)
         .attr("height", boxHeight)
         .style("fill", d => d.color);
 
@@ -990,9 +1011,26 @@
         .enter()
         .append("text")
         .attr("class", "legend-label")
-        .attr("x", boxTextSeperation) // Adjust position relative to boxes
-        .attr("y", (d, i) => i * boxSeperation + textVerticalAdjustment) // Align text with boxes
-        .text(d => `${d.minValue.toFixed(1)} - ${d.maxValue.toFixed(1)}`); // Format text labels for ranges
+        .attr("text-anchor", "middle")
+        .attr("dominant-baseline", "hanging")
+        .style("user-select", "none")
+        .attr("x", (d, i) => i * boxWidth) // Adjust position relative to boxes
+        .attr("y", boxHeight + extraLineHeight) // Align text with boxes
+        .text((d, i) => {
+          if (i == numberOfSteps - 1) return `${d.minValue.toFixed(1)}`;
+          return `${d.minValue.toFixed(1)}`;
+        });
+
+      legend2.selectAll(".legend-lines")
+        .data(legendDataCounty)
+        .enter()
+        .append("line")
+        .attr("class", "legend-lines")
+        .attr("x1", (d, i) => i * boxWidth)
+        .attr("x2", (d, i) => i * boxWidth)
+        .attr("y1", 0)
+        .attr("y2", boxHeight + extraLineHeight);
+
       //
 
       function showCountyLegend() {
@@ -1047,10 +1085,10 @@
       let areaLabelRect = areaLabel.append("rect").attr("class", "label");
       let areaLabelName = areaLabel.append("text")
         .attr("class", "label")
-        .style("font-size", `${areaNameFontSize}px`);
+        .style("font-size", `${areaNameFontSize} px`);
       let areaLabelStat = areaLabel.append("text")
         .attr("class", "label")
-        .style("font-size", `${percentageFontSize}px`);
+        .style("font-size", `${percentageFontSize} px`);
 
 
       //zooming
@@ -1096,7 +1134,7 @@
           .attr("width", newWidth)
           .attr("height", newHeight);
         areaLabel.selectAll("text")
-          .style("font-size", `${newNameFontSize}px`);
+          .style("font-size", `${newNameFontSize} px`);
       }
 
 
