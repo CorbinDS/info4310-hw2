@@ -10,6 +10,7 @@
     rel="stylesheet">
 
   <style>
+
     svg {
       /* border: 1px black solid; */
       background-color: rgb(255, 255, 255);
@@ -42,14 +43,25 @@
     }
 
     table {
-      border: 1px solid black;
+      border: 0;
+    }
+    
+    th, td {
+      text-align: left;
+      padding: 3px 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+
+    #tableDiv {
+        margin: 0;
+        padding: 80 0 0 40;
     }
 
     .legend-lines {
       stroke: black;
       stroke-width: 2px;
     }
-
 
     /* label {
       display: block;
@@ -59,9 +71,9 @@
       position: relative;
     } */
     #radioBox {
-      padding-top: 2px;
-      padding-bottom: 2px;
-      border: 2px solid black;
+      margin: 0 0 15 0;
+      padding: 5px;
+      border: 1px solid black;
       border-radius: 5px;
       display: inline-block;
       background-color: lightgray;
@@ -70,7 +82,7 @@
 
     #filterButton {
       display: flex;
-      gap: 1px;
+      gap: 5px;
     }
 
     #filterButton label {
@@ -86,7 +98,7 @@
     }
 
     #filterButton input[type="radio"]:checked+span {
-      background-color: #025FEF;
+      background-color: #0C4A90;
       padding: 5px;
       color: white;
       border-radius: 5px;
@@ -188,6 +200,10 @@
     .flex-container>div {
       width: 1200;
     }
+    .notesContainer {
+      margin: 0;
+      padding: 30 0 0 0;
+    }
   </style>
 </head>
 
@@ -222,12 +238,12 @@
   <!-- ----------------------------
               CHOROPLETH & TABLE
         ---------------------------- -->
-  <div class="flex-container">
-    <div>
-      <h3><span class="rate">DISABILITY PREVALENCE</span><br>By State and County</h3>
-    </div>
+  <div>
+    <h3><span class="rate">DISABILITY PREVALENCE</span><br>By State and County</h3>
   </div>
-  <div id="radioBox">
+  
+<!-- STATE/COUNTY TOGGLE BUTTON -->
+<div id="radioBox">
     <div id="filterButton">
       <label>
         <input type="radio" id="stateView" name="filterButton" value="state" checked>
@@ -238,125 +254,137 @@
         <span>County View</span>
       </label>
     </div>
-  </div>
-  <svg id="legend" height="200" width="400"></svg>
+  </div>      
+    <!-- CHOROPLETH LEGEND -->
+    <svg id="legend" height="200" width="400"></svg>
 
-  <svg id="chloroMap" height="600" width="1000"></svg>
-  <div id="tableDiv">
-    <table id="table">
-      <thead>
-        <tr id="header">
-          <th>Disability Type (ages)</th>
-          <th>%</th>
-          <th>MOE</th>
-          <th>Number</th>
-          <th>MOE</th>
-          <th>Base Population</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr id="row1">
-          <th>Any Disability (under 18)</td>
-          <td>10.1</td>
-          <td>±0.8</td>
-          <td>10,199</td>
-          <td>±799</td>
-          <td>101,394</td>
-        </tr>
-        <tr id="row2">
-          <th>Hearing (under 18)</td>
-          <td>2.5</td>
-          <td>±0.4</td>
-          <td>2,574</td>
-          <td>±359</td>
-          <td>101,394</td>
-        </tr>
-        <tr id="row3">
-          <th>Hearing (18 - 64)</td>
-          <td>2.5</td>
-          <td>±0.4</td>
-          <td>2,574</td>
-          <td>±359</td>
-          <td>101,394</td>
-        </tr>
-        <tr id="row4">
-          <th>Visual (under 18)</td>
-          <td>2.5</td>
-          <td>±0.4</td>
-          <td>2,574</td>
-          <td>±359</td>
-          <td>101,394</td>
-        </tr>
-        <tr id="row5">
-          <th>Visual (18 - 64)</td>
-          <td>2.5</td>
-          <td>±0.4</td>
-          <td>2,574</td>
-          <td>±359</td>
-          <td>101,394</td>
-        </tr>
-        <tr id="row6">
-          <th>Cognitive (under 18)</td>
-          <td>2.5</td>
-          <td>±0.4</td>
-          <td>2,574</td>
-          <td>±359</td>
-          <td>101,394</td>
-        </tr>
-        <tr id="row7">
-          <th>Cognitive (18 - 64)</td>
-          <td>2.5</td>
-          <td>±0.4</td>
-          <td>2,574</td>
-          <td>±359</td>
-          <td>101,394</td>
-        </tr>
-        <tr id="row8">
-          <th>Ambulatory (under 18)</td>
-          <td>2.5</td>
-          <td>±0.4</td>
-          <td>2,574</td>
-          <td>±359</td>
-          <td>101,394</td>
-        </tr>
-        <tr id="row9">
-          <th>Ambulatory (18 - 64)</td>
-          <td>2.5</td>
-          <td>±0.4</td>
-          <td>2,574</td>
-          <td>±359</td>
-          <td>101,394</td>
-        </tr>
-        <tr id="row10">
-          <th>Selfcare (under 18)</td>
-          <td>2.5</td>
-          <td>±0.4</td>
-          <td>2,574</td>
-          <td>±359</td>
-          <td>101,394</td>
-        </tr>
-        <tr id="row11">
-          <th>Selfcare (18 - 64)</td>
-          <td>2.5</td>
-          <td>±0.4</td>
-          <td>2,574</td>
-          <td>±359</td>
-          <td>101,394</td>
-        </tr>
-        <tr id="row12">
-          <th>Independent Living (18 - 64)</td>
-          <td>2.5</td>
-          <td>±0.4</td>
-          <td>2,574</td>
-          <td>±359</td>
-          <td>101,394</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="flex-container">
+    <div>
+      <!-- CHOROPLETH -->
+      <svg id="chloroMap" height="600" width="1000" ></svg>
+    </div>
+    <div>
+      <!-- DATA TABLE -->
+      <div id="tableDiv">
+        <table id="table">
+          <thead>
+            <tr id="header">
+              <th>Disability&nbsp;Type&nbsp;(ages)</th>
+              <th>%</th>
+              <th>MOE</th>
+              <th>Number</th>
+              <th>MOE</th>
+              <th>Base&nbsp;Population</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="row1">
+              <th>Any Disability (<18)</td>
+              <td>10.1</td>
+              <td>±0.8</td>
+              <td>10,199</td>
+              <td>±799</td>
+              <td>101,394</td>
+            </tr>
+            <tr id="row2">
+              <th>Hearing (<18)</td>
+              <td>2.5</td>
+              <td>±0.4</td>
+              <td>2,574</td>
+              <td>±359</td>
+              <td>101,394</td>
+            </tr>
+            <tr id="row3">
+              <th>Hearing (18-64)</td>
+              <td>2.5</td>
+              <td>±0.4</td>
+              <td>2,574</td>
+              <td>±359</td>
+              <td>101,394</td>
+            </tr>
+            <tr id="row4">
+              <th>Visual (<18)</td>
+              <td>2.5</td>
+              <td>±0.4</td>
+              <td>2,574</td>
+              <td>±359</td>
+              <td>101,394</td>
+            </tr>
+            <tr id="row5">
+              <th>Visual (18-64)</td>
+              <td>2.5</td>
+              <td>±0.4</td>
+              <td>2,574</td>
+              <td>±359</td>
+              <td>101,394</td>
+            </tr>
+            <tr id="row6">
+              <th>Cognitive (<18)</td>
+              <td>2.5</td>
+              <td>±0.4</td>
+              <td>2,574</td>
+              <td>±359</td>
+              <td>101,394</td>
+            </tr>
+            <tr id="row7">
+              <th>Cognitive (18-64)</td>
+              <td>2.5</td>
+              <td>±0.4</td>
+              <td>2,574</td>
+              <td>±359</td>
+              <td>101,394</td>
+            </tr>
+            <tr id="row8">
+              <th>Ambulatory (<18)</td>
+              <td>2.5</td>
+              <td>±0.4</td>
+              <td>2,574</td>
+              <td>±359</td>
+              <td>101,394</td>
+            </tr>
+            <tr id="row9">
+              <th>Ambulatory (18-64)</td>
+              <td>2.5</td>
+              <td>±0.4</td>
+              <td>2,574</td>
+              <td>±359</td>
+              <td>101,394</td>
+            </tr>
+            <tr id="row10">
+              <th>Selfcare (<18)</td>
+              <td>2.5</td>
+              <td>±0.4</td>
+              <td>2,574</td>
+              <td>±359</td>
+              <td>101,394</td>
+            </tr>
+            <tr id="row11">
+              <th>Selfcare (18-64)</td>
+              <td>2.5</td>
+              <td>±0.4</td>
+              <td>2,574</td>
+              <td>±359</td>
+              <td>101,394</td>
+            </tr>
+            <tr id="row12">
+              <th>Independent Living (18-64)</td>
+              <td>2.5</td>
+              <td>±0.4</td>
+              <td>2,574</td>
+              <td>±359</td>
+              <td>101,394</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size: 1em; padding: 0 15;">MOE: Margin of Error</p>
+      </div>
+
+    </div>
   </div>
+
 
   <!-- NOTES -->
-  <div style="clear: both;">
+  <div class="notesContainer">
     <h4>Notes</h4>
     <p>
       All estimates provided by these visualizations are based on the the most recently available US Census Bureau’s
@@ -377,7 +405,9 @@
     </ul>
   </div>
 
-  <!---   ==============================
+
+
+<!---   ==============================
         PREVALENCE: BY DISABILITY TYPE
         ============================== --->
   <script id="notes1">
@@ -427,6 +457,7 @@
       const myColor = d3.scaleOrdinal()
         .domain(allGroup)
         .range(d3.schemeCategory10);
+        //.range(["#eee", "#ccc"]);
 
       // X-AXIS
       const x = d3.scaleTime()
@@ -461,7 +492,7 @@
       chartArea.selectAll("myLines")
         .data(dataReady)
         .join("path")
-        .attr("class", d => d.name)
+        //.attr("class", d => d.name)
         .attr("d", d => line(d.values))
         .attr("stroke", d => myColor(d.name))
         .attr("opacity", .3)
@@ -484,6 +515,44 @@
         .attr("cy", d => y(d.value))
         .attr("r", 6)
         .attr("stroke", "white")
+        // mouseover
+        .on("mouseover", function(event, d) {
+          let circle = d3.select(this)
+          let parentData = d3.select(this.parentNode).datum() // get data from the parent of the circle which is the g tag
+          circle.attr("stroke", "black")
+              .attr("stroke-width", "2")
+          let xPos = x(d.time) // where the x is
+          let yPos = y(d.value) // where the y is
+          
+          const formatTime = d3.utcFormat("%Y"); // format the date for the tooltip
+          let g = chartArea.append("g")
+            .attr("transform", `translate(${xPos}, ${yPos})`)
+            .attr("class", "mouseOverLabel")
+            .style("pointer-events", "none")
+          g.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", 80)
+            .attr("height", 40)
+            .attr("fill", "white")
+            .attr("stroke", myColor(parentData.name))
+          g.append("text")
+            .attr("x", 5)
+            .attr("y", 15)
+            .text("Year: " + formatTime(d.time))
+          g.append("text")
+            .attr("x", 5)
+            .attr("y", 35)
+            .text("Value: " + d.value)            
+        })
+        // mouseout
+        .on("mouseout", function(event, d) {
+          let circle = d3.select(this)
+          let parentData = d3.select(this.parentNode).datum() // get data from the parent of the circle which is the g tag
+          circle.attr("stroke", "white")
+              .attr("stroke-width", "1")
+          chartArea.select(".mouseOverLabel").remove() // find the thing with the class and remove it
+        })
 
       // Add a legend (interactive)
       chartArea
@@ -1131,7 +1200,7 @@
         .attr("class", "county-outline")
         .attr("d", path);
 
-      let areaLabel = viewport.append("g");
+      let areaLabel = map.append("g").style("pointer-events", "none");
       let areaLabelRect = areaLabel.append("rect")
         .attr("stroke", "black");
 
@@ -1237,19 +1306,23 @@
 
       function stateHover(event, d) {
         d3.selectAll(".state")
-          .transition()
-          .duration(200)
+          //.transition()
+          //.duration(200)
           .style("opacity", .4);
         d3.select(this).raise()
-          .transition()
-          .duration(200)
+          //.transition()
+          //.duration(200)
           .style("opacity", 1)
           .style("stroke", "black")
           .style("stroke-width", "3px");
 
+
         // label stuff
         let bounds = path.bounds(d.geometry);
-
+        //
+        let transform = d3.zoomTransform(map.node());
+        bounds[0] = transform.apply(bounds[0]);
+        bounds[1] = transform.apply(bounds[1]);
 
         let dW = bounds[1][0] - bounds[0][0];
         let dH = bounds[1][1] - bounds[0][1];
@@ -1293,8 +1366,8 @@
 
       function stateUnhover(event, d) {
         d3.selectAll(".state").lower()
-          .transition()
-          .duration(200)
+          //.transition()
+          //.duration(200)
           .style("opacity", 1)
           .style("stroke", "none");
         // d3.select(this).lower()
@@ -1311,14 +1384,16 @@
 
       function countyHover(event, d) {
         d3.select(this).raise()
-          .transition()
-          .duration(200)
+          // .transition()
+          // .duration(200)
           .style("opacity", 1)
           .style("stroke", "black")
           .style("stroke-width", "3px");
 
         let bounds = path.bounds(d.geometry);
-
+        let transform = d3.zoomTransform(map.node());
+        bounds[0] = transform.apply(bounds[0]);
+        bounds[1] = transform.apply(bounds[1]);
 
         let dW = bounds[1][0] - bounds[0][0];
         let dH = bounds[1][1] - bounds[0][1];
@@ -1358,8 +1433,8 @@
 
       function countyUnhover(event, d) {
         d3.selectAll(".county")
-          .transition()
-          .duration(200)
+          // .transition()
+          // .duration(200)
           .style("opacity", 1)
           .style("stroke", "none");
 
