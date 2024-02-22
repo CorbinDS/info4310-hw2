@@ -10,7 +10,6 @@
     rel="stylesheet">
 
   <style>
-
     svg {
       /* border: 1px black solid; */
       background-color: rgb(255, 255, 255);
@@ -32,6 +31,8 @@
 
     .state-outline {
       stroke: rgb(255, 255, 255);
+      stroke-width: 1px;
+
       fill: none;
     }
 
@@ -45,8 +46,9 @@
     table {
       border: 0;
     }
-    
-    th, td {
+
+    th,
+    td {
       text-align: left;
       padding: 3px 10px;
       border-bottom: 1px solid #ccc;
@@ -54,8 +56,8 @@
 
 
     #tableDiv {
-        margin: 0;
-        padding: 80 0 0 40;
+      margin: 0;
+      padding: 80 0 0 40;
     }
 
     .legend-lines {
@@ -200,6 +202,7 @@
     .flex-container>div {
       width: 1200;
     }
+
     .notesContainer {
       margin: 0;
       padding: 30 0 0 0;
@@ -239,37 +242,39 @@
   </div>
   <div>
     <p style="font-size: 1.1em;">
-    <span style="color: #025FEF; font-weight: bold;">FUN TIP:</span> Click the chart labels to toggle dot visability on and off.<br>
-    <b>NOTE:</b> 2020 data is missing due to poor biased response rates during COVID.</p>
+      <span style="color: #025FEF; font-weight: bold;">FUN TIP:</span> Click the chart labels to toggle dot visability
+      on and off.<br>
+      <b>NOTE:</b> 2020 data is missing due to poor biased response rates during COVID.
+    </p>
   </div>
 
-<!-- ----------------------------
+  <!-- ----------------------------
             CHOROPLETH & TABLE
       ---------------------------- -->
-<div>
-  <h3><span class="rate">DISABILITY PREVALENCE</span><br>By State and County</h3>
-</div>
-  
-<!-- STATE/COUNTY TOGGLE BUTTON -->
-<div id="radioBox">
-  <div id="filterButton">
-    <label>
-      <input type="radio" id="stateView" name="filterButton" value="state" checked>
-      <span>State View </span>
-    </label>
-    <label>
-      <input type="radio" id="countyView" name="filterButton" value="county">
-      <span>County View</span>
-    </label>
+  <div>
+    <h3><span class="rate">DISABILITY PREVALENCE</span><br>By State and County</h3>
   </div>
-</div>      
-<!-- CHOROPLETH LEGEND -->
-<svg id="legend" height="200" width="400"></svg>
+
+  <!-- STATE/COUNTY TOGGLE BUTTON -->
+  <div id="radioBox">
+    <div id="filterButton">
+      <label>
+        <input type="radio" id="stateView" name="filterButton" value="state" checked>
+        <span>State View </span>
+      </label>
+      <label>
+        <input type="radio" id="countyView" name="filterButton" value="county">
+        <span>County View</span>
+      </label>
+    </div>
+  </div>
+  <!-- CHOROPLETH LEGEND -->
+  <svg id="legend" height="200" width="400"></svg>
 
   <div class="flex-container">
     <div>
       <!-- CHOROPLETH -->
-      <svg id="chloroMap" height="600" width="1000" ></svg>
+      <svg id="chloroMap" height="600" width="1000"></svg>
     </div>
     <div>
       <!-- DATA TABLE -->
@@ -287,7 +292,7 @@
           </thead>
           <tbody>
             <tr id="row1">
-              <th>Any Disability (<18)</td>
+              <th>Any Disability (<18)< /td>
               <td>10.1</td>
               <td>±0.8</td>
               <td>10,199</td>
@@ -295,7 +300,7 @@
               <td>101,394</td>
             </tr>
             <tr id="row2">
-              <th>Hearing (<18)</td>
+              <th>Hearing (<18)< /td>
               <td>2.5</td>
               <td>±0.4</td>
               <td>2,574</td>
@@ -311,7 +316,7 @@
               <td>101,394</td>
             </tr>
             <tr id="row4">
-              <th>Visual (<18)</td>
+              <th>Visual (<18)< /td>
               <td>2.5</td>
               <td>±0.4</td>
               <td>2,574</td>
@@ -327,7 +332,7 @@
               <td>101,394</td>
             </tr>
             <tr id="row6">
-              <th>Cognitive (<18)</td>
+              <th>Cognitive (<18)< /td>
               <td>2.5</td>
               <td>±0.4</td>
               <td>2,574</td>
@@ -343,7 +348,7 @@
               <td>101,394</td>
             </tr>
             <tr id="row8">
-              <th>Ambulatory (<18)</td>
+              <th>Ambulatory (<18)< /td>
               <td>2.5</td>
               <td>±0.4</td>
               <td>2,574</td>
@@ -359,7 +364,7 @@
               <td>101,394</td>
             </tr>
             <tr id="row10">
-              <th>Selfcare (<18)</td>
+              <th>Selfcare (<18)< /td>
               <td>2.5</td>
               <td>±0.4</td>
               <td>2,574</td>
@@ -415,7 +420,7 @@
 
 
 
-<!---   ==============================
+  <!---   ==============================
         PREVALENCE: BY DISABILITY TYPE
         ============================== --->
   <script id="notes1">
@@ -458,14 +463,13 @@
         };
       });
 
-      // console
-      // console.log(dataReady)
+
 
       // Color Scale: one color for each group
       const myColor = d3.scaleOrdinal()
         .domain(allGroup)
         .range(d3.schemeCategory10);
-        //.range(["#eee", "#ccc"]);
+      //.range(["#eee", "#ccc"]);
 
       // X-AXIS
       const x = d3.scaleTime()
@@ -523,16 +527,16 @@
         .attr("cy", d => y(d.value))
         .attr("r", 6)
         .attr("stroke", "white")
-        
+
         // mouseover
-        .on("mouseover", function(event, d) {
+        .on("mouseover", function (event, d) {
           let circle = d3.select(this)
           let parentData = d3.select(this.parentNode).datum() // get data from the parent of the circle which is the g tag
           circle.attr("stroke", "black")
-              .attr("stroke-width", "5")
+            .attr("stroke-width", "5")
           let xPos = x(d.time) // where the x is
           let yPos = y(d.value) // where the y is
-          
+
           const formatTime = d3.utcFormat("%Y"); // format the date for the tooltip
           let g = chartArea.append("g")
             .attr("transform", `translate(${xPos}, ${yPos})`)
@@ -552,14 +556,14 @@
           g.append("text")
             .attr("x", 5)
             .attr("y", 35)
-            .text("Rate (%): " + d.value)            
+            .text("Rate (%): " + d.value)
         })
         // mouseout
-        .on("mouseout", function(event, d) {
+        .on("mouseout", function (event, d) {
           let circle = d3.select(this)
           let parentData = d3.select(this.parentNode).datum() // get data from the parent of the circle which is the g tag
           circle.attr("stroke", "white")
-              .attr("stroke-width", "1")
+            .attr("stroke-width", "1")
           chartArea.select(".mouseOverLabel").remove() // find the thing with the class and remove it
         })
 
@@ -689,14 +693,14 @@
         .attr("r", 6)
         .attr("stroke", "white")
         // mouseover
-        .on("mouseover", function(event, d) {
+        .on("mouseover", function (event, d) {
           let circle = d3.select(this)
           let parentData = d3.select(this.parentNode).datum() // get data from the parent of the circle which is the g tag
           circle.attr("stroke", "black")
-              .attr("stroke-width", "5")
+            .attr("stroke-width", "5")
           let xPos = x(d.time) // where the x is
           let yPos = y(d.value) // where the y is
-          
+
           const formatTime = d3.utcFormat("%Y"); // format the date for the tooltip
           let g = ageChartArea.append("g")
             .attr("transform", `translate(${xPos}, ${yPos})`)
@@ -716,18 +720,18 @@
           g.append("text")
             .attr("x", 5)
             .attr("y", 35)
-            .text("Rate (%): " + d.value)            
+            .text("Rate (%): " + d.value)
         })
         // mouseout
-        .on("mouseout", function(event, d) {
+        .on("mouseout", function (event, d) {
           let circle = d3.select(this)
           let parentData = d3.select(this.parentNode).datum() // get data from the parent of the circle which is the g tag
           circle.attr("stroke", "white")
-              .attr("stroke-width", "1")
+            .attr("stroke-width", "1")
           ageChartArea.select(".mouseOverLabel").remove() // find the thing with the class and remove it
         })
-        
-        
+
+
       // Add a legend (interactive)
       ageChartArea
         .selectAll("myLegend")
@@ -794,8 +798,7 @@
         };
       });
 
-      // console
-      // console.log(dataReady)
+
 
       // Color Scale: one color for each group
       const myColor = d3.scaleOrdinal()
@@ -860,14 +863,14 @@
         .attr("stroke", "white")
 
         // mouseover
-        .on("mouseover", function(event, d) {
+        .on("mouseover", function (event, d) {
           let circle = d3.select(this)
           let parentData = d3.select(this.parentNode).datum() // get data from the parent of the circle which is the g tag
           circle.attr("stroke", "black")
-              .attr("stroke-width", "5")
+            .attr("stroke-width", "5")
           let xPos = x(d.time) // where the x is
           let yPos = y(d.value) // where the y is
-          
+
           const formatTime = d3.utcFormat("%Y"); // format the date for the tooltip
           let g = raceChartArea.append("g")
             .attr("transform", `translate(${xPos}, ${yPos})`)
@@ -887,14 +890,14 @@
           g.append("text")
             .attr("x", 5)
             .attr("y", 35)
-            .text("Rate (%): " + d.value)            
+            .text("Rate (%): " + d.value)
         })
         // mouseout
-        .on("mouseout", function(event, d) {
+        .on("mouseout", function (event, d) {
           let circle = d3.select(this)
           let parentData = d3.select(this.parentNode).datum() // get data from the parent of the circle which is the g tag
           circle.attr("stroke", "white")
-              .attr("stroke-width", "1")
+            .attr("stroke-width", "1")
           raceChartArea.select(".mouseOverLabel").remove() // find the thing with the class and remove it
         })
 
@@ -940,7 +943,6 @@
 
     const boxHeight = 20;
     const boxWidth = 40;
-    // const boxSeperation = 25; //vertical distances between boxes
     const boxTextSeperation = 25; //horizontal distance between start of the leftmost letter and the left of the box 
     const textVerticalAdjustment = 15; //probably don't change this one unless you change font or font size
     const extraLineHeight = 10;
@@ -1087,7 +1089,6 @@
       });
 
 
-      // console.log(disabilityData);
 
       fipsToStats = {};
 
@@ -1332,29 +1333,14 @@
         }
 
 
-        console.log(transform.k);
 
         if (transform.k > 3) {
           showCountyLegend();
           stateUnhover();
         } else if (!countyMode) {
           showStateLegend();
-          // countyUnhover(); 
         }
 
-        // hover label box
-        // let newScale = Math.min(Math.max(1 / transform.k, 0.5), 1);
-        // let curWidth = areaLabelRect.attr("width");
-        // let newWidth = curWidth * newScale;
-        // let newHeight = labelRectangleHeight * newScale;
-        // let newNameFontSize = areaNameFontSize * newScale;
-
-
-        // areaLabelRect
-        //   .attr("width", newWidth)
-        //   .attr("height", newHeight);
-        // areaLabel.selectAll("text")
-        //   .style("font-size", `${newNameFontSize} px`);
       }
 
 
@@ -1366,7 +1352,7 @@
           let val = fipsToStats[d.id];
           if (!val) {
             console.error('No data for id:', d.id);
-            return '#000'; // Or any fallback color
+            return '#000';
           }
           return colorScaleState(Number(fipsToStats[d.id]["Estimate!!Percent with a disability!!Total civilian noninstitutionalized population"]))
         });
@@ -1374,8 +1360,7 @@
       viewport.selectAll(".county").attr("fill", d => {
         const stats = fipsToStats[d.id];
         if (!stats) {
-          // console.log("Missing data for ID:", d.id); // Log missing IDs
-          return "#000"; // Default color for missing data
+          return "#000";
         }
         return colorScaleCounty(Number(stats["Estimate!!Percent with a disability!!Total civilian noninstitutionalized population"]));
       });
@@ -1384,19 +1369,11 @@
 
 
 
-      // viewport.selectAll(".county").on("mouseover", countyHover);
-
-
-
 
       function stateHover(event, d) {
         d3.selectAll(".state")
-          //.transition()
-          //.duration(200)
           .style("opacity", .4);
         d3.select(this).raise()
-          //.transition()
-          //.duration(200)
           .style("opacity", 1)
           .style("stroke", "orangered")
           .style("stroke-width", "3px");
@@ -1451,15 +1428,9 @@
 
       function stateUnhover(event, d) {
         d3.selectAll(".state").lower()
-          //.transition()
-          //.duration(200)
           .style("opacity", 1)
           .style("stroke", "none");
-        // d3.select(this).lower()
-        //   .transition()
-        //   .duration(200)
-        //   .style("opacity", 1)
-        //   .style("stroke", "none");
+
 
         areaLabelName.text("");
         areaLabel.attr("visibility", "hidden");
@@ -1469,8 +1440,6 @@
 
       function countyHover(event, d) {
         d3.select(this).raise()
-          // .transition()
-          // .duration(200)
           .style("opacity", 1)
           .style("stroke", "orangered");
 
@@ -1505,28 +1474,22 @@
           .attr("height", labelRectangleHeight)
           .attr("rx", 0)
           .attr("fill", "orangered")
-        areaLabel.attr("transform", `translate(${cx - 50}, ${cy - 50})`).raise();
+
         areaLabelTriangle
           .attr("transform", `translate(${areaLabelRect.attr("width") / 2}, ${labelRectangleHeight})`)
 
-        //
+        areaLabel.attr("transform", `translate(${cx - areaLabelRect.attr("width") / 2}, ${cy - dH / 2 - labelRectangleHeight - 5})`).raise();
+
         d3.select("table#table").style("visibility", "visible");
         updateTable(fipsToStats[d.id]);
 
       }
 
       function countyUnhover(event, d) {
-        d3.selectAll(".county")
-          // .transition()
-          // .duration(200)
+        d3.select(this).lower()
           .style("opacity", 1)
           .style("stroke", "none");
-
-        // d3.select(this)
-        //   .transition()
-        //   .duration(200)
-        //   .style("opacity", 1)
-        //   .style("stroke", "none");
+        d3.selectAll(".state").lower();
 
         areaLabelName.text("");
         areaLabel.attr("visibility", "hidden");
@@ -1538,7 +1501,6 @@
 
 
       function mapClicked(event, d) {
-        console.log(d);
         //d is the specific state or county clicked on
         let bounds = path.bounds(d.geometry);
 
@@ -1575,6 +1537,7 @@
             .attr("visibility", "visible");
 
           showCountyLegend();
+          map.call(zoom.transform, d3.zoomIdentity);
         } else {
           map.call(zoom.transform, d3.zoomIdentity);
         }
