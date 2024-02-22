@@ -94,7 +94,7 @@
     }
 
     body {
-      margin: 50 100 200 200;
+      margin: 50 150 200 150;
       padding: 0;
       font-family: 'Barlow', sans-serif;
     }
@@ -122,10 +122,6 @@
       padding: 0;
     }
 
-    b {
-      font-weight: 500;
-    }
-
     ul li {
       font-size: 1.15em;
       line-height: 1.75em;
@@ -138,13 +134,6 @@
       padding: 0;
       line-height: 1em;
       color: #025FEF;
-    }
-
-    h1.gradient {
-      color: #025FEF;
-      background-image: linear-gradient(30deg, #000b88, #0099ff);
-      background-clip: text;
-      color: transparent;
     }
 
     h2 {
@@ -169,7 +158,7 @@
     }
 
     .rate {
-      font-size: .5em;
+      font-size: .45em;
       color: black;
     }
 
@@ -191,8 +180,13 @@
       font-size: .8em;
     }
 
-    div.lineContainer {
-      float: left;
+    .flex-container {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+
+    .flex-container>div {
+      width: 1200;
     }
   </style>
 </head>
@@ -203,31 +197,36 @@
   <h1>Disability Statistics</h1>
   <h2>Disabled Population<br>in the United States is <span class="heavy">&nbsp;13.4%&nbsp;</span></h2>
   <p class="source">2022 American Community Survey 1-Year Estimates</p>
-  <dvi style="clear: both;">
-    <div class="lineContainer">
-      <h3><span class="rate">DISABILITY PREVALENCE RATES</span><br>By Disability Type</h3>
+
+  <!-- ----------------------------
+              LINE CHARTS
+      ---------------------------- -->
+  <div class="flex-container">
+    <div>
+      <h3><span class="rate">DISABILITY PREVALENCE</span><br>By Disability Type</h3>
       <svg id="typePlot" height="350" width="480">
       </svg>
     </div>
-    <div class="lineContainer">
-      <h3><span class="rate">DISABILITY PREVALENCE RATES</span><br>By Age</h3>
+    <div>
+      <h3><span class="rate">DISABILITY PREVALENCE</span><br>By Age</h3>
       <svg id="agePlot" height="350" width="480">
       </svg>
     </div>
-    <div class="lineContainer">
-      <h3><span class="rate">DISABILITY PREVALENCE RATES</span><br>By Race</h3>
+    <div>
+      <h3><span class="rate">DISABILITY PREVALENCE</span><br>By Race</h3>
       <svg id="racePlot" height="350" width="480">
       </svg>
     </div>
-  </dvi>
+  </div>
 
   <!-- ----------------------------
               CHOROPLETH & TABLE
         ---------------------------- -->
-  <div style="clear: both; margin:0; padding: 5 0 0 0;">
-    <h3><span class="rate">DISABILITY PREVALENCE RATES</span><br>By State and County</h3>
+  <div class="flex-container">
+    <div>
+      <h3><span class="rate">DISABILITY PREVALENCE</span><br>By State and County</h3>
+    </div>
   </div>
-
   <div id="radioBox">
     <div id="filterButton">
       <label>
