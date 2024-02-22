@@ -34,9 +34,11 @@
       fill: none;
     }
 
-    .label {
+    .arealabel {
       user-select: none;
       pointer-events: none;
+      font-weight: bold;
+      font-size: large;
     }
 
     table {
@@ -722,7 +724,7 @@
     =================== hover effect ===========================================
     */
     const labelRectangleHeight = 40;
-    const pixelsPerLetter = 10; //used to calculate width of rectangle
+    const pixelsPerLetter = 11; //used to calculate width of rectangle
     const areaNameFontSize = 14;
     const percentageFontSize = 12;
     const labelVerticalAdjustment = 25;
@@ -1085,13 +1087,23 @@
         .attr("d", path);
 
       let areaLabel = viewport.append("g");
-      let areaLabelRect = areaLabel.append("rect").attr("class", "label");
+      let areaLabelRect = areaLabel.append("rect")
+        .attr("stroke", "black");
+
+      const trianglePoints = [[-10, 0], [10, 0], [0, 20]]
+      let areaLabelTriangle = areaLabel.append("polygon")
+        .attr("points", trianglePoints.map(point => point.join(",")).join(" "))
+        .style("fill", "orangered")
+        .style("stroke", "black")
+        .style("stroke-width", 1);
       let areaLabelName = areaLabel.append("text")
-        .attr("class", "label")
+        .attr("class", "arealabel")
         .style("font-size", `${areaNameFontSize} px`);
       let areaLabelStat = areaLabel.append("text")
-        .attr("class", "label")
+        .attr("class", "areastat")
         .style("font-size", `${percentageFontSize} px`);
+
+
 
 
       //zooming
@@ -1220,6 +1232,9 @@
           .attr("height", labelRectangleHeight)
           .attr("rx", 0)
           .attr("fill", "orangered")
+
+        areaLabelTriangle
+          .attr("transform", `translate(${areaLabelRect.attr("width") / 2}, ${labelRectangleHeight})`)
 
         areaLabel.attr("transform", `translate(${cx - areaLabelRect.attr("width") / 2}, ${ty})`).raise();
 
