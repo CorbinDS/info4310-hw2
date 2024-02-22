@@ -50,8 +50,47 @@
       stroke-width: 2px;
     }
 
-    input[type="radio"].toggle {
+
+    /* label {
+      display: block;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      position: relative;
+    } */
+    #radioBox {
+      padding-top: 2px;
+      padding-bottom: 2px;
+      border: 2px solid black;
+      border-radius: 5px;
+      display: inline-block;
+      background-color: lightgray;
+      /* box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5); */
+    }
+
+    #filterButton {
+      display: flex;
+      gap: 1px;
+    }
+
+    #filterButton label {
+      display: block;
+      /* padding-bottom: 10px; */
+      background-color: lightgray;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #filterButton input[type="radio"] {
       display: none;
+    }
+
+    #filterButton input[type="radio"]:checked+span {
+      background-color: #025FEF;
+      padding: 5px;
+      color: white;
+      border-radius: 5px;
+      box-shadow: inset 0px 0px 5px rgba(0, 0, 0, 0.5);
     }
 
     body {
@@ -189,10 +228,17 @@
     <h3><span class="rate">DISABILITY PREVALENCE RATES</span><br>By State and County</h3>
   </div>
 
-  <div id="filterButton">
-    <input type="radio" id="stateView" name="filterButton" value="state" checked><label for="stateView">State
-      View</label>
-    <input type="radio" id="countyView" name="filterButton" value="county"><label for="countyView">County View</label>
+  <div id="radioBox">
+    <div id="filterButton">
+      <label>
+        <input type="radio" id="stateView" name="filterButton" value="state" checked>
+        <span>State View </span>
+      </label>
+      <label>
+        <input type="radio" id="countyView" name="filterButton" value="county">
+        <span>County View</span>
+      </label>
+    </div>
   </div>
   <svg id="legend" height="200" width="400"></svg>
 
@@ -1103,6 +1149,8 @@
         .attr("class", "areastat")
         .style("font-size", `${percentageFontSize} px`);
 
+      areaLabel.attr("visibility", "hidden");
+
 
 
 
@@ -1300,6 +1348,8 @@
           .attr("rx", 0)
           .attr("fill", "orangered")
         areaLabel.attr("transform", `translate(${cx - 50}, ${cy - 50})`).raise();
+        areaLabelTriangle
+          .attr("transform", `translate(${areaLabelRect.attr("width") / 2}, ${labelRectangleHeight})`)
 
         //
         d3.select("table#table").style("visibility", "visible");
